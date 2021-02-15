@@ -50,8 +50,8 @@
                                           <th>#</th>
                                           <th>{{ translate('Date') }}</th>
                                           <th>{{ translate('Amount')}}</th>
-                                          <th>{{ translate('Status')}}</th>
-                                          <th width="50%">{{ translate('Message')}}</th>
+                                          <th data-breakpoints="lg">{{ translate('Status')}}</th>
+                                          <th data-breakpoints="lg">{{ translate('Message')}}</th>
                                       </tr>
                                   </thead>
                                   <tbody>
@@ -103,7 +103,7 @@
                                     <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="number" class="form-control mb-3" name="amount" min="1" max="{{ Auth::user()->seller->admin_to_pay }}" placeholder="{{ translate('Amount') }}" required>
+                                    <input type="number" lang="en" class="form-control mb-3" name="amount" min="1" max="{{ Auth::user()->seller->admin_to_pay }}" placeholder="{{ translate('Amount') }}" required>
                                 </div>
                             </div>
                             <div class="row">

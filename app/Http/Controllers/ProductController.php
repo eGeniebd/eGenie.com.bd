@@ -13,6 +13,7 @@ use App\SubSubCategory;
 use Session;
 use ImageOptimizer;
 use DB;
+use Combinations;
 use CoreComponentRepository;
 use Illuminate\Support\Str;
 use Artisan;
@@ -126,7 +127,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::where('parent_id', 0)
+            ->where('digital', 0)
+            ->with('childrenCategories')
+            ->get();
+
         return view('backend.product.products.create', compact('categories'));
     }
 
@@ -275,7 +280,7 @@ class ProductController extends Controller
         }
 
         //Generates the combinations of customer choice options
-        $combinations = combinations($options);
+        $combinations = Combinations::makeCombinations($options);
         if(count($combinations[0]) > 0){
             $product->variant_product = 1;
             foreach ($combinations as $key => $combination){
@@ -365,7 +370,10 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $lang = $request->lang;
         $tags = json_decode($product->tags);
-        $categories = Category::all();
+        $categories = Category::where('parent_id', 0)
+            ->where('digital', 0)
+            ->with('childrenCategories')
+            ->get();
         return view('backend.product.products.edit', compact('product', 'categories', 'tags','lang'));
      }
 
@@ -485,10 +493,8 @@ class ProductController extends Controller
             }
         }
 
-        if($product->attributes != json_encode($request->choice_attributes)){
-            foreach ($product->stocks as $key => $stock) {
-                $stock->delete();
-            }
+        foreach ($product->stocks as $key => $stock) {
+            $stock->delete();
         }
 
         if (!empty($request->choice_no)) {
@@ -519,7 +525,7 @@ class ProductController extends Controller
             }
         }
 
-        $combinations = combinations($options);
+        $combinations = Combinations::makeCombinations($options);
         if(count($combinations[0]) > 0){
             $product->variant_product = 1;
             foreach ($combinations as $key => $combination){
@@ -642,12 +648,6 @@ class ProductController extends Controller
         }
     }
 
-    public function get_products_by_subcategory(Request $request)
-    {
-        $products = Product::where('subcategory_id', $request->subcategory_id)->get();
-        return $products;
-    }
-
     public function get_products_by_brand(Request $request)
     {
         $products = Product::where('brand_id', $request->brand_id)->get();
@@ -690,6 +690,16 @@ class ProductController extends Controller
         return 0;
     }
 
+    public function updateSellerFeatured(Request $request)
+    {
+        $product = Product::findOrFail($request->id);
+        $product->seller_featured = $request->status;
+        if($product->save()){
+            return 1;
+        }
+        return 0;
+    }
+
     public function sku_combination(Request $request)
     {
         $options = array();
@@ -715,7 +725,7 @@ class ProductController extends Controller
             }
         }
 
-        $combinations = combinations($options);
+        $combinations = Combinations::makeCombinations($options);
         return view('backend.product.products.sku_combinations', compact('combinations', 'unit_price', 'colors_active', 'product_name'));
     }
 
@@ -746,7 +756,7 @@ class ProductController extends Controller
             }
         }
 
-        $combinations = combinations($options);
+        $combinations = Combinations::makeCombinations($options);
         return view('backend.product.products.sku_combinations_edit', compact('combinations', 'unit_price', 'colors_active', 'product_name', 'product'));
     }
 

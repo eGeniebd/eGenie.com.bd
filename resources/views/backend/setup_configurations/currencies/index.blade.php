@@ -54,6 +54,18 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <input type="hidden" name="types[]" value="decimal_separator">
+                        <div class="col-lg-3">
+                            <label class="control-label">{{translate('Decimal Separator')}}</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <select class="form-control aiz-selectpicker" name="decimal_separator">
+                                <option value="1" @if(\App\BusinessSetting::where('type', 'decimal_separator')->first()->value == 1) selected @endif>1,23,456.70</option>
+                                <option value="2" @if(\App\BusinessSetting::where('type', 'decimal_separator')->first()->value == 2) selected @endif>1.23.456,70</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <input type="hidden" name="types[]" value="no_of_decimals">
                         <div class="col-lg-3">
                             <label class="control-label">{{translate('No of decimals')}}</label>
@@ -92,7 +104,7 @@
 <div class="card">
     <div class="card-header row gutters-5">
         <div class="col text-center text-md-left">
-            <h5 class="mb-md-0 h6">{{ translate('Brands') }}</h5>
+            <h5 class="mb-md-0 h6">{{ translate('All Currencies') }}</h5>
         </div>
         <div class="col-md-4">
             <form class="" id="sort_currencies" action="" method="GET">

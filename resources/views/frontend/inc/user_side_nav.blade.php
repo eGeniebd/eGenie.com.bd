@@ -13,9 +13,9 @@
         <div class="px-4 text-center mb-4">
             <span class="avatar avatar-md mb-3">
                 @if (Auth::user()->avatar_original != null)
-                    <img src="{{ uploaded_asset(Auth::user()->avatar_original) }}" >
+                    <img src="{{ uploaded_asset(Auth::user()->avatar_original) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                 @else
-                    <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image rounded-circle">
+                    <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image rounded-circle" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                 @endif
             </span>
 
@@ -164,7 +164,7 @@
                     @endphp
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('reviews.seller') }}" class="aiz-side-nav-link {{ areActiveRoutes(['reviews.seller'])}}">
-                            <i class="las la-star-of-david aiz-side-nav-icon"></i>
+                            <i class="las la-star-half-alt aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Product Reviews') }}</span>
                             @if($review_count > 0)<span class="badge badge-inline badge-success">{{ $review_count }}</span>@endif
                         </a>

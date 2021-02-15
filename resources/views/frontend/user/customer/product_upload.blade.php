@@ -34,8 +34,11 @@
                                     <label class="col-md-2 col-from-label">{{translate('Product Category')}} <span class="text-danger">*</span></label>
                                     <div class="col-md-10">
                                         <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Select a Category')}}" id="categories" name="category_id" data-live-search="true" required>
-                                            @foreach ($categories as $key => $category)
+                                            @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
+                                                @foreach ($category->childrenCategories as $childCategory)
+                                                    @include('categories.child_category', ['child_category' => $childCategory])
+                                                @endforeach
                                             @endforeach
                                         </select>
                                     </div>
@@ -179,7 +182,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-2 col-from-label">{{ translate('Unit Price')}} <span class="text-danger">*</span></label>
                                     <div class="col-md-10">
-                                        <input type="number" min="0" step="0.01" class="form-control" name="unit_price" placeholder="{{ translate('Unit Price')}} ({{ translate('Base Price')}})" required>
+                                        <input type="number" lang="en" min="0" step="0.01" class="form-control" name="unit_price" placeholder="{{ translate('Unit Price')}} ({{ translate('Base Price')}})" required>
                                     </div>
                                 </div>
                             </div>

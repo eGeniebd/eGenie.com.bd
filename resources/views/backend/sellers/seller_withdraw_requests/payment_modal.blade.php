@@ -49,9 +49,9 @@
                 <label class="col-sm-3 col-from-label" for="amount">{{translate('Requested Amount')}}</label>
                 <div class="col-sm-9">
                     @if ($seller_withdraw_request->amount > $seller->admin_to_pay)
-                        <input type="number" min="0" step="0.01" name="amount" id="amount" value="{{ $seller->admin_to_pay }}" class="form-control" required>
+                        <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ $seller->admin_to_pay }}" class="form-control" required>
                     @else
-                        <input type="number" min="0" step="0.01" name="amount" id="amount" value="{{ $seller_withdraw_request->amount }}" class="form-control" required>
+                        <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ $seller_withdraw_request->amount }}" class="form-control" required>
                     @endif
                 </div>
             </div>

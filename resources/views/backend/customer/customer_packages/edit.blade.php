@@ -33,13 +33,13 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label">{{translate('Amount')}}</label>
                     <div class="col-sm-9">
-                        <input type="number" min="0" step="0.01" placeholder="{{translate('Amount')}}" value="{{ $customer_package->amount }}" id="amount" name="amount" class="form-control" required>
+                        <input type="number" lang="en" min="0" step="0.01" placeholder="{{translate('Amount')}}" value="{{ $customer_package->amount }}" id="amount" name="amount" class="form-control" required>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label">{{translate('Product Upload')}}</label>
                     <div class="col-sm-9">
-                        <input type="number" min="0" step="1" placeholder="{{translate('Product Upload')}}" value="{{ $customer_package->product_upload }}" id="product_upload" name="product_upload" class="form-control" required>
+                        <input type="number" lang="en" min="0" step="1" placeholder="{{translate('Product Upload')}}" value="{{ $customer_package->product_upload }}" id="product_upload" name="product_upload" class="form-control" required>
                     </div>
                 </div>
                 <div class="form-group row">

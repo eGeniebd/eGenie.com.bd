@@ -168,7 +168,7 @@
                         <div class="row">
                             <label class="col-md-3 col-form-label">{{ translate('Bank Routing Number') }}</label>
                             <div class="col-md-9">
-                                <input type="number" class="form-control mb-3" placeholder="{{ translate('Bank Routing Number')}}" value="{{ Auth::user()->seller->bank_routing_no }}" name="bank_routing_no">
+                                <input type="number" lang="en" class="form-control mb-3" placeholder="{{ translate('Bank Routing Number')}}" value="{{ Auth::user()->seller->bank_routing_no }}" name="bank_routing_no">
                             </div>
                         </div>
                       </div>
@@ -257,14 +257,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>{{ translate('City')}}</label>
+                        @if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'area_wise_shipping')
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>{{ translate('City')}}</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="city" required>
+                                        @foreach (\App\City::get() as $key => $city)
+                                            <option value="{{ $city->name }}">{{ $city->getTranslation('name') }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Your City')}}" name="city" value="" required>
+                        @else
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>{{ translate('City')}}</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control mb-3" placeholder="{{ translate('Your City')}}" name="city" value="" required>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-2">
                                 <label>{{ translate('Postal code')}}</label>

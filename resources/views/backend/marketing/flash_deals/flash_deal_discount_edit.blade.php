@@ -40,7 +40,7 @@
                 </td>
                 @if ($flash_deal_product != null)
                 <td>
-                    <input type="number" name="discount_{{ $id }}" value="{{ $flash_deal_product->discount }}" min="0" step="1" class="form-control" required>
+                    <input type="number" lang="en" name="discount_{{ $id }}" value="{{ $flash_deal_product->discount }}" min="0" step="1" class="form-control" required>
                 </td>
                 <td>
                     <select class="aiz-selectpicker" name="discount_type_{{ $id }}">
@@ -50,7 +50,7 @@
                 </td>
                 @else
                 <td>
-                    <input type="number" name="discount_{{ $id }}" value="{{ $product->discount }}" min="0" step="1" class="form-control" required>
+                    <input type="number" lang="en" name="discount_{{ $id }}" value="{{ $product->discount }}" min="0" step="1" class="form-control" required>
                 </td>
                 <td>
                     <select class="aiz-selectpicker" name="discount_type_{{ $id }}">

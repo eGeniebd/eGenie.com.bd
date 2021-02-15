@@ -91,6 +91,8 @@ class SubscriberController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Subscriber::destroy($id);
+        flash(translate('Subscriber has been deleted successfully'))->success();
+        return redirect()->route('subscribers.index');
     }
 }

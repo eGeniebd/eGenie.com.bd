@@ -218,7 +218,7 @@ class PublicSslCommerzPaymentController extends Controller
 
           $tran_id = $request->input('tran_id');
 
-        #Check order status in order tabel against the transaction id or order id.
+          #Check order status in order tabel against the transaction id or order id.
           $order = Order::findOrFail($request->session()->get('order_id'));
 
                 if($order->payment_status =='Pending')

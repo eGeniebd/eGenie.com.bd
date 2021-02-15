@@ -53,6 +53,169 @@
 
         <div class="col-md-6">
             <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6 ">{{translate('Stripe Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="stripe">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="STRIPE_KEY">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Stripe Key')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                            <input type="text" class="form-control" name="STRIPE_KEY" value="{{  env('STRIPE_KEY') }}" placeholder="{{ translate('STRIPE KEY') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="STRIPE_SECRET">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Stripe Secret')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="STRIPE_SECRET" value="{{  env('STRIPE_SECRET') }}" placeholder="{{ translate('STRIPE SECRET') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header ">
+                    <h5 class="mb-0 h6">{{translate('Bkash Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="bkash">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_APP_KEY">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('BKASH CHECKOUT APP KEY')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="BKASH_CHECKOUT_APP_KEY" value="{{  env('BKASH_CHECKOUT_APP_KEY') }}" placeholder="{{translate('BKASH CHECKOUT APP KEY')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_APP_SECRET">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('BKASH CHECKOUT APP SECRET')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="BKASH_CHECKOUT_APP_SECRET" value="{{  env('BKASH_CHECKOUT_APP_SECRET') }}" placeholder="{{translate('BKASH CHECKOUT APP SECRET')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_USER_NAME">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('BKASH CHECKOUT USER NAME')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="BKASH_CHECKOUT_USER_NAME" value="{{  env('BKASH_CHECKOUT_USER_NAME') }}" placeholder="{{translate('BKASH CHECKOUT USER NAME')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="BKASH_CHECKOUT_PASSWORD">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('BKASH CHECKOUT PASSWORD')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="BKASH_CHECKOUT_PASSWORD" value="{{  env('BKASH_CHECKOUT_PASSWORD') }}" placeholder="{{translate('BKASH CHECKOUT PASSWORD')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Bkash Sandbox Mode')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input value="1" name="bkash_sandbox" type="checkbox" @if (\App\BusinessSetting::where('type', 'bkash_sandbox')->first()->value == 1)
+                                        checked
+                                    @endif>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6 ">{{translate('Nagad Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="nagad">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NAGAD_MODE">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('NAGAD MODE')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                            <input type="text" class="form-control" name="NAGAD_MODE" value="{{  env('NAGAD_MODE') }}" placeholder="{{translate('NAGAD MODE')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NAGAD_MERCHANT_ID">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('NAGAD MERCHANT ID')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="NAGAD_MERCHANT_ID" value="{{  env('NAGAD_MERCHANT_ID') }}" placeholder="{{translate('NAGAD MERCHANT ID')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NAGAD_MERCHANT_NUMBER">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('NAGAD MERCHANT NUMBER')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="NAGAD_MERCHANT_NUMBER" value="{{  env('NAGAD_MERCHANT_NUMBER') }}" placeholder="{{translate('NAGAD MERCHANT NUMBER')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NAGAD_PG_PUBLIC_KEY">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('NAGAD PG PUBLIC KEY')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="NAGAD_PG_PUBLIC_KEY" value="{{  env('NAGAD_PG_PUBLIC_KEY') }}" placeholder="{{translate('NAGAD PG PUBLIC KEY')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NAGAD_MERCHANT_PRIVATE_KEY">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('NAGAD MERCHANT PRIVATE KEY')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="NAGAD_MERCHANT_PRIVATE_KEY" value="{{  env('NAGAD_MERCHANT_PRIVATE_KEY') }}" placeholder="{{translate('NAGAD MERCHANT PRIVATE KEY')}}" required>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
                 <div class="card-header ">
                     <h5 class="mb-0 h6">{{translate('Sslcommerz Credential')}}</h5>
                 </div>
@@ -89,41 +252,6 @@
                                     @endif>
                                     <span class="slider round"></span>
                                 </label>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('Stripe Credential')}}</h5>
-                </div>
-                <div class="card-body">
-                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="payment_method" value="stripe">
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="STRIPE_KEY">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Stripe Key')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                            <input type="text" class="form-control" name="STRIPE_KEY" value="{{  env('STRIPE_KEY') }}" placeholder="{{ translate('STRIPE KEY') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="STRIPE_SECRET">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Stripe Secret')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="STRIPE_SECRET" value="{{  env('STRIPE_SECRET') }}" placeholder="{{ translate('STRIPE SECRET') }}" required>
                             </div>
                         </div>
                         <div class="form-group mb-0 text-right">
@@ -264,45 +392,6 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('VoguePay Credential')}}</h5>
-                </div>
-                <div class="card-body">
-                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="payment_method" value="voguepay">
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="VOGUE_MERCHANT_ID">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('MERCHANT ID')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="VOGUE_MERCHANT_ID" value="{{  env('VOGUE_MERCHANT_ID') }}" placeholder="{{ translate('MERCHANT ID') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Sandbox Mode')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input value="1" name="voguepay_sandbox" type="checkbox" @if (\App\BusinessSetting::where('type', 'voguepay_sandbox')->first()->value == 1)
-                                        checked
-                                    @endif>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
                     <h5 class="mb-0 h6 ">{{translate('Payhere Credential')}}</h5>
                 </div>
                 <div class="card-body">
@@ -357,259 +446,142 @@
             </div>
         </div>
         <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0 h6">{{translate('Ngenius Credential')}}</h5>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="payment_method" value="ngenius">
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="NGENIUS_OUTLET_ID">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('NGENIUS OUTLET ID')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="NGENIUS_OUTLET_ID" value="{{  env('NGENIUS_OUTLET_ID') }}" placeholder="{{ translate('NGENIUS OUTLET ID') }}" required>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{translate('Ngenius Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="ngenius">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NGENIUS_OUTLET_ID">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('NGENIUS OUTLET ID')}}</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="NGENIUS_OUTLET_ID" value="{{  env('NGENIUS_OUTLET_ID') }}" placeholder="{{ translate('NGENIUS OUTLET ID') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NGENIUS_API_KEY">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('NGENIUS API KEY')}}</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="NGENIUS_API_KEY" value="{{  env('NGENIUS_API_KEY') }}" placeholder="{{ translate('NGENIUS API KEY') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="NGENIUS_CURRENCY">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('NGENIUS CURRENCY')}}</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="NGENIUS_CURRENCY" value="{{  env('NGENIUS_CURRENCY') }}" placeholder="{{ translate('NGENIUS CURRENCY') }}" required>
+                                <br>
+                                <div class="alert alert-primary" role="alert">
+                                    Currency must be <b>AED</b> or <b>USD</b> or <b>EUR</b><br>
+                                    If kept empty, <b>AED</b> will be used automatically
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="NGENIUS_API_KEY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('NGENIUS API KEY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="NGENIUS_API_KEY" value="{{  env('NGENIUS_API_KEY') }}" placeholder="{{ translate('NGENIUS API KEY') }}" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="NGENIUS_CURRENCY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('NGENIUS CURRENCY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="NGENIUS_CURRENCY" value="{{  env('NGENIUS_CURRENCY') }}" placeholder="{{ translate('NGENIUS CURRENCY') }}" required>
-                                    <br>
-                                    <div class="alert alert-primary" role="alert">
-                                        Currency must be <b>AED</b> or <b>USD</b> or <b>EUR</b><br>
-                                        If kept empty, <b>AED</b> will be used automatically
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0 text-right">
-                                <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
 
-            @if(\App\Addon::where('unique_identifier', 'african_pg')->first() != null && \App\Addon::where('unique_identifier', 'african_pg')->first()->activated)
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0 h6">{{translate('Mpesa Credential')}}</h5>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="payment_method" value="mpesa">
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_CONSUMER_KEY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA CONSUMER KEY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="MPESA_CONSUMER_KEY" value="{{  env('MPESA_CONSUMER_KEY') }}" placeholder="{{ translate('MPESA_CONSUMER_KEY') }}" required>
-                                </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6 ">{{translate('VoguePay Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="voguepay">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="VOGUE_MERCHANT_ID">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('MERCHANT ID')}}</label>
                             </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_CONSUMER_SECRET">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA CONSUMER SECRET')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="MPESA_CONSUMER_SECRET" value="{{  env('MPESA_CONSUMER_SECRET') }}" placeholder="{{ translate('MPESA_CONSUMER_SECRET') }}" required>
-                                </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="VOGUE_MERCHANT_ID" value="{{  env('VOGUE_MERCHANT_ID') }}" placeholder="{{ translate('MERCHANT ID') }}" required>
                             </div>
-
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_SHORT_CODE">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA SHORT CODE')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="MPESA_SHORT_CODE" value="{{  env('MPESA_SHORT_CODE') }}" placeholder="{{ translate('MPESA_SHORT_CODE') }}" required>
-                                </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Sandbox Mode')}}</label>
                             </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_USERNAME">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA USERNAME')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="MPESA_USERNAME" value="{{  env('MPESA_USERNAME') }}" placeholder="{{ translate('MPESA_USERNAME') }}" required>
-                                </div>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input value="1" name="voguepay_sandbox" type="checkbox" @if (\App\BusinessSetting::where('type', 'voguepay_sandbox')->first()->value == 1)
+                                        checked
+                                    @endif>
+                                    <span class="slider round"></span>
+                                </label>
                             </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_PASSWORD">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA PASSWORD')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="MPESA_PASSWORD" value="{{  env('MPESA_PASSWORD') }}" placeholder="{{ translate('MPESA_PASSWORD') }}" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_PASSKEY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA PASSKEY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="MPESA_PASSKEY" value="{{  env('MPESA_PASSKEY') }}" placeholder="{{ translate('MPESA_PASSKEY') }}" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="MPESA_ENV">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('MPESA SANDBOX ACTIVATION')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <select name="MPESA_ENV" class="form-control aiz-selectpicker" required>
-                                        @if(env('MPESA_ENV') == 'sandbox')
-                                            <option value="live">live</option>
-                                            <option value="sandbox" selected>sandbox</option>
-                                        @else
-                                            <option value="live" selected>live</option>
-                                            <option value="sandbox">sandbox</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-0 text-right">
-                                <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="mb-0 h6">{{translate('Flutterwave Credential')}}</h3>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="payment_method" value="flutterwave">
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="RAVE_PUBLIC_KEY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('RAVE_PUBLIC_KEY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="RAVE_PUBLIC_KEY" value="{{  env('RAVE_PUBLIC_KEY') }}" placeholder="{{ translate('RAVE_PUBLIC_KEY') }}" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="RAVE_SECRET_KEY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('RAVE_SECRET_KEY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="RAVE_SECRET_KEY" value="{{  env('RAVE_SECRET_KEY') }}" placeholder="{{ translate('RAVE_SECRET_KEY') }}" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="RAVE_TITLE">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('RAVE_TITLE')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="RAVE_TITLE" value="{{  env('RAVE_TITLE') }}" placeholder="{{ translate('RAVE_TITLE') }}" required>
-                                </div>
-                            </div>
+        </div>
 
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="RAVE_ENVIRONMENT">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('STAGIN ACTIVATION')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <select name="RAVE_ENVIRONMENT" class="form-control aiz-selectpicker" required>
-                                        @if(env('RAVE_ENVIRONMENT') == 'staging')
-                                            <option value="live">live</option>
-                                            <option value="staging" selected>staging</option>
-                                        @else
-                                            <option value="live" selected>live</option>
-                                            <option value="staging">staging</option>
-                                        @endif
-                                    </select>
-                                </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{translate('Iyzico Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="payment_method" value="iyzico">
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="IYZICO_API_KEY">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('IYZICO_API_KEY')}}</label>
                             </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="IYZICO_API_KEY" value="{{  env('IYZICO_API_KEY') }}" placeholder="{{ translate('IYZICO API KEY') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="IYZICO_SECRET_KEY">
+                            <div class="col-lg-4">
+                                <label class="col-from-label">{{translate('IYZICO_SECRET_KEY')}}</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="IYZICO_SECRET_KEY" value="{{  env('IYZICO_SECRET_KEY') }}" placeholder="{{ translate('IYZICO SECRET KEY') }}" required>
+                            </div>
+                        </div>
 
-                            <div class="form-group mb-0 text-right">
-                                <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('IYZICO Sandbox Mode')}}</label>
                             </div>
-                        </form>
-                    </div>
+                            <div class="col-md-8">
+                                <label class="aiz-switch aiz-switch-success mb-0">
+                                    <input value="1" name="iyzico_sandbox" type="checkbox" @if (\App\BusinessSetting::where('type', 'iyzico_sandbox')->first()->value == 1)
+                                        checked
+                                    @endif>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-        @if(false)
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="mb-0 h6">{{translate('PAYFAST Credential')}}</h3>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="payment_method" value="payfast">
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="PAYFAST_MERCHANT_ID">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('PAYFAST_MERCHANT_ID')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="PAYFAST_MERCHANT_ID" value="{{  env('PAYFAST_MERCHANT_ID') }}" placeholder="{{ translate('PAYFAST_MERCHANT_ID') }}" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <input type="hidden" name="types[]" value="PAYFAST_MERCHANT_KEY">
-                                <div class="col-lg-4">
-                                    <label class="col-from-label">{{translate('PAYFAST_MERCHANT_KEY')}}</label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" name="PAYFAST_MERCHANT_KEY" value="{{  env('PAYFAST_MERCHANT_KEY') }}" placeholder="{{ translate('PAYFAST_MERCHANT_KEY') }}" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-md-4">
-                                    <label class="col-from-label">{{translate('PAYFAST Sandbox Mode')}}</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <label class="aiz-switch aiz-switch-success mb-0">
-                                        <input value="1" name="payfast_sandbox" type="checkbox" @if (\App\BusinessSetting::where('type', 'payfast_sandbox')->first()->value == 1)
-                                            checked
-                                        @endif>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-0 text-right">
-                                <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endif
-        @endif
+        </div>
     </div>
 
     @endsection

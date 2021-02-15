@@ -24,7 +24,6 @@ Route::get('/refresh-csrf', function(){
 Route::post('/aiz-uploader', 'AizUploadController@show_uploader');
 Route::post('/aiz-uploader/upload', 'AizUploadController@upload');
 Route::get('/aiz-uploader/get_uploaded_files', 'AizUploadController@get_uploaded_files');
-Route::delete('/aiz-uploader/destroy/{id}', 'AizUploadController@destroy');
 Route::post('/aiz-uploader/get_file_by_ids', 'AizUploadController@get_preview_files');
 Route::get('/aiz-uploader/download/{id}', 'AizUploadController@attachment_download')->name('download_attachment');
 
@@ -34,6 +33,7 @@ Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 Route::get('/verification-confirmation/{code}', 'Auth\VerificationController@verification_confirmation')->name('email.verification.confirmation');
 Route::get('/email_change/callback', 'HomeController@email_change_callback')->name('email_change.callback');
+Route::post('/password/reset/email/submit', 'HomeController@reset_password_with_code')->name('password.update');
 
 
 Route::post('/language', 'LanguageController@changeLanguage')->name('language.change');
@@ -45,11 +45,6 @@ Route::get('/users/login', 'HomeController@login')->name('user.login');
 Route::get('/users/registration', 'HomeController@registration')->name('user.registration');
 //Route::post('/users/login', 'HomeController@user_login')->name('user.login.submit');
 Route::post('/users/login/cart', 'HomeController@cart_login')->name('cart.login.submit');
-
-Route::post('/subcategories/get_subcategories_by_category', 'SubCategoryController@get_subcategories_by_category')->name('subcategories.get_subcategories_by_category');
-Route::post('/subsubcategories/get_subsubcategories_by_subcategory', 'SubSubCategoryController@get_subsubcategories_by_subcategory')->name('subsubcategories.get_subsubcategories_by_subcategory');
-Route::post('/subsubcategories/get_brands_by_subsubcategory', 'SubSubCategoryController@get_brands_by_subsubcategory')->name('subsubcategories.get_brands_by_subsubcategory');
-Route::post('/subsubcategories/get_attributes_by_subsubcategory', 'SubSubCategoryController@get_attributes_by_subsubcategory')->name('subsubcategories.get_attributes_by_subsubcategory');
 
 //Home Page
 Route::get('/', 'HomeController@index')->name('home');
@@ -136,7 +131,6 @@ Route::resource('subscribers','SubscriberController');
 
 Route::get('/brands', 'HomeController@all_brands')->name('brands.all');
 Route::get('/categories', 'HomeController@all_categories')->name('categories.all');
-Route::post('/config_content', 'HomeController@product_content')->name('configs.update_status');
 
 Route::get('/sellerpolicy', 'HomeController@sellerpolicy')->name('sellerpolicy');
 Route::get('/returnpolicy', 'HomeController@returnpolicy')->name('returnpolicy');
@@ -200,7 +194,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('/products/duplicate/{id}', 'ProductController@duplicate')->name('products.duplicate');
 	Route::post('/products/sku_combination', 'ProductController@sku_combination')->name('products.sku_combination');
 	Route::post('/products/sku_combination_edit', 'ProductController@sku_combination_edit')->name('products.sku_combination_edit');
-	Route::post('/products/featured', 'ProductController@updateFeatured')->name('products.featured');
+	Route::post('/products/seller/featured', 'ProductController@updateSellerFeatured')->name('products.seller.featured');
 	Route::post('/products/published', 'ProductController@updatePublished')->name('products.published');
 
 	Route::get('invoice/customer/{order_id}', 'InvoiceController@customer_invoice_download')->name('customer.invoice.download');
@@ -259,11 +253,8 @@ Route::get('/vogue-pay', 'VoguePayController@showForm');
 Route::get('/vogue-pay/success/{id}', 'VoguePayController@paymentSuccess');
 Route::get('/vogue-pay/failure/{id}', 'VoguePayController@paymentFailure');
 
-Route::any('/iyzico/payment/callback', 'IyzicoController@callback')->name('iyzico.callback');
-
-//2checkout Start
-Route::post('twocheckout/payment/callback', 'TwoCheckoutController@twocheckoutPost')->name('twocheckout.post');
-//2checkout END
+//Iyzico
+Route::any('/iyzico/payment/callback/{payment_type}/{amount?}/{payment_method?}/{order_id?}/{customer_package_id?}/{seller_package_id?}', 'IyzicoController@callback')->name('iyzico.callback');
 
 Route::resource('addresses','AddressController');
 Route::get('/addresses/destroy/{id}', 'AddressController@destroy')->name('addresses.destroy');
@@ -295,6 +286,14 @@ Route::any('ngenius/cart_payment_callback', 'NgeniusController@cart_payment_call
 Route::any('ngenius/wallet_payment_callback', 'NgeniusController@wallet_payment_callback')->name('ngenius.wallet_payment_callback');
 Route::any('ngenius/customer_package_payment_callback', 'NgeniusController@customer_package_payment_callback')->name('ngenius.customer_package_payment_callback');
 Route::any('ngenius/seller_package_payment_callback', 'NgeniusController@seller_package_payment_callback')->name('ngenius.seller_package_payment_callback');
+
+//bKash
+Route::post('/bkash/createpayment', 'BkashController@checkout')->name('bkash.checkout');
+Route::post('/bkash/executepayment', 'BkashController@excecute')->name('bkash.excecute');
+Route::get('/bkash/success', 'BkashController@success')->name('bkash.success');
+
+//Nagad
+Route::get('/nagad/callback', 'NagadController@verify')->name('nagad.callback');
 
 //Custom page
 Route::get('/{slug}', 'PageController@show_custom_page')->name('custom-pages.show_custom_page');

@@ -79,10 +79,13 @@ class CurrencyController extends Controller
     public function update_status(Request $request)
     {
         $currency = Currency::findOrFail($request->id);
-        $currency->status = $request->status;
-        if($currency->save()){
-            return 1;
+        if($request->status == 0){
+            if (get_setting('system_default_currency') == $currency->id) {
+                return 0;
+            }
         }
-        return 0;
+        $currency->status = $request->status;
+        $currency->save();
+        return 1;
     }
 }

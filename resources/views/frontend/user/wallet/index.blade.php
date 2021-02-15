@@ -54,9 +54,9 @@
                                 <thead>
                                   <tr>
                                       <th>#</th>
-                                      <th>{{  translate('Date') }}</th>
+                                      <th data-breakpoints="lg">{{  translate('Date') }}</th>
                                       <th>{{ translate('Amount')}}</th>
-                                      <th>{{ translate('Payment Method')}}</th>
+                                      <th data-breakpoints="lg">{{ translate('Payment Method')}}</th>
                                       <th class="text-right">{{ translate('Approval')}}</th>
                                   </tr>
                                 </thead>
@@ -111,7 +111,7 @@
                               <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>
                           </div>
                           <div class="col-md-8">
-                              <input type="number" class="form-control mb-3" name="amount" placeholder="{{ translate('Amount')}}" required>
+                              <input type="number" lang="en" class="form-control mb-3" name="amount" placeholder="{{ translate('Amount')}}" required>
                           </div>
                       </div>
                       <div class="row">
@@ -120,7 +120,7 @@
                           </div>
                           <div class="col-md-8">
                               <div class="mb-3">
-                                  <select class="form-control selectpicker" data-minimum-results-for-search="Infinity" name="payment_option">
+                                  <select class="form-control selectpicker" data-minimum-results-for-search="Infinity" name="payment_option" data-live-search="true">
                                       @if (\App\BusinessSetting::where('type', 'paypal_payment')->first()->value == 1)
                                           <option value="paypal">{{ translate('Paypal')}}</option>
                                       @endif
@@ -147,6 +147,9 @@
                                       @endif
                                       @if (\App\BusinessSetting::where('type', 'razorpay')->first()->value == 1)
                                           <option value="razorpay">{{ translate('Razorpay')}}</option>
+                                      @endif
+                                      @if (\App\BusinessSetting::where('type', 'iyzico')->first()->value == 1)
+                                          <option value="iyzico">{{ translate('Iyzico')}}</option>
                                       @endif
                                       @if(\App\Addon::where('unique_identifier', 'african_pg')->first() != null && \App\Addon::where('unique_identifier', 'african_pg')->first()->activated)
                                           @if (\App\BusinessSetting::where('type', 'mpesa')->first()->value == 1)

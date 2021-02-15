@@ -31,11 +31,6 @@ class DemoController extends Controller
 {
     public function __construct()
     {
-
-        if(env('DEMO_MODE') != 'On'){
-            return false;
-        }
-
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', 600);
 
@@ -43,12 +38,18 @@ class DemoController extends Controller
 
     public function cron_1()
     {
+        if(env('DEMO_MODE') != 'On'){
+            return back();
+        }
         $this->drop_all_tables();
         $this->import_demo_sql();
     }
 
     public function cron_2()
     {
+        if(env('DEMO_MODE') != 'On'){
+            return back();
+        }
         $this->remove_folder();
         $this->extract_uploads();
     }
@@ -449,25 +450,46 @@ class DemoController extends Controller
         }
 
         foreach (Product::all() as $key => $value) {
-            if ($value->subsubcategory_id == null) {
-                $value->category_id = Category::where('name', SubCategory::find($value->subcategory_id)->name)->first()->id;
-                $value->save();
+            try{
+                if ($value->subsubcategory_id == null) {
+                    $value->category_id = Category::where('name', SubCategory::find($value->subcategory_id)->name)->first()->id;
+                    $value->save();
+                }
+                else {
+                    $value->category_id = Category::where('name', SubSubCategory::find($value->subsubcategory_id)->name)->first()->id;
+                    $value->save();
+                }
             }
-            else {
-                $value->category_id = Category::where('name', SubSubCategory::find($value->subsubcategory_id)->name)->first()->id;
-                $value->save();
+            catch(\Exception $e){
+
             }
         }
 
         foreach (CustomerProduct::all() as $key => $value) {
-            if ($value->subsubcategory_id == null) {
-                $value->category_id = Category::where('name', SubCategory::find($value->subcategory_id)->name)->first()->id;
-                $value->save();
+            try{
+                if ($value->subsubcategory_id == null) {
+                    $value->category_id = Category::where('name', SubCategory::find($value->subcategory_id)->name)->first()->id;
+                    $value->save();
+                }
+                else {
+                    $value->category_id = Category::where('name', SubSubCategory::find($value->subsubcategory_id)->name)->first()->id;
+                    $value->save();
+                }
             }
-            else {
-                $value->category_id = Category::where('name', SubSubCategory::find($value->subsubcategory_id)->name)->first()->id;
-                $value->save();
+            catch(\Exception $e){
+
             }
         }
+
+        // foreach (Product::all() as $key => $product) {
+        //     if (is_array(json_decode($product->tags))) {
+        //         $tags = array();
+        //         foreach (json_decode($product->tags) as $tag) {
+        //             array_push($tags, $tag->value);
+        //         }
+        //         $product->tags = implode(',', $tags);
+        //         $product->save();
+        //     }
+        // }
     }
 }

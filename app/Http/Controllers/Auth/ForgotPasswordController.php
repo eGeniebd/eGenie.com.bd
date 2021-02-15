@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use App\User;
+use App\Mail\SecondEmailVerifyMailManager;
+use Mail;
 
 class ForgotPasswordController extends Controller
 {
@@ -43,18 +45,24 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
-            $this->validateEmail($request);
+            $user = User::where('email', $request->email)->first();
+            if ($user != null) {
+                $user->verification_code = rand(100000,999999);
+                $user->save();
 
-            // We will send the password reset link to this user. Once we have attempted
-            // to send the link, we will examine the response then see the message we
-            // need to show to the user. Finally, we'll send out a proper response.
-            $response = $this->broker()->sendResetLink(
-                $this->credentials($request)
-            );
+                $array['view'] = 'emails.verification';
+                $array['from'] = env('MAIL_USERNAME');
+                $array['subject'] = translate('Password Reset');
+                $array['content'] = 'Verification Code is '.$user->verification_code;
 
-            return $response == Password::RESET_LINK_SENT
-                        ? $this->sendResetLinkResponse($request, $response)
-                        : $this->sendResetLinkFailedResponse($request, $response);
+                Mail::to($user->email)->queue(new SecondEmailVerifyMailManager($array));
+
+                return view('auth.passwords.reset');
+            }
+            else {
+                flash(translate('No account exists with this email'))->error();
+                return back();
+            }
         }
         else{
             $user = User::where('phone', $request->email)->first();

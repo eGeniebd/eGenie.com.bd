@@ -34,12 +34,6 @@ class ProductDetailCollection extends ResourceCollection
                             'sub_categories' => route('subCategories.index', $data->category_id)
                         ]
                     ],
-                    'sub_category' => [
-                        'name' => $data->subCategory != null ? $data->subCategory->name : null,
-                        'links' => [
-                            'products' => $data->subCategory != null ? route('products.subCategory', $data->subcategory_id) : null
-                        ]
-                    ],
                     'brand' => [
                         'name' => $data->brand != null ? $data->brand->name : null,
                         'logo' => $data->brand != null ? api_asset($data->brand->logo) : null,

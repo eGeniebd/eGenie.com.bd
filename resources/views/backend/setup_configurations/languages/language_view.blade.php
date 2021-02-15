@@ -28,12 +28,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $i = 1;
-                        @endphp
                         @foreach ($lang_keys as $key => $translation)
                             <tr>
-                                <td>{{ $i }}</td>
+                                <td>{{ ($key+1) + ($lang_keys->currentPage() - 1)*$lang_keys->perPage() }}</td>
                                 <td class="key">{{ $translation->lang_key }}</td>
                                 <td>
                                     <input type="text" class="form-control value" style="width:100%" name="values[{{ $translation->lang_key }}]" @if (($traslate_lang = \App\Translation::where('lang', $language->code)->where('lang_key', $translation->lang_key)->first()) != null)
@@ -41,9 +38,6 @@
                                     @endif>
                                 </td>
                             </tr>
-                            @php
-                                $i++;
-                            @endphp
                         @endforeach
                     </tbody>
                 </table>

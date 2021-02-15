@@ -43,7 +43,7 @@
 								</div>
 								<div class="col-md-4 col-xl-3 ml-auto mr-0 col-2 position-static">
 									<div class="aiz-uploader-search text-right">
-										<input type="text" class="form-control form-control-xs" name="aiz-uploader-search" placeholder="Search your files">
+										<input type="text" class="form-control form-control-xs" name="aiz-uploader-search" placeholder="{{ translate('Search your files') }}">
 										<i class="search-icon d-md-none"><span></span></i>
 									</div>
 								</div>

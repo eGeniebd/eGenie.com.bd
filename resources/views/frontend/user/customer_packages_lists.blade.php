@@ -140,6 +140,15 @@
                                         @if(\App\BusinessSetting::where('type', 'ngenius')->first()->value == 1)
                                             <option value="ngenius">{{ translate('Ngenius')}}</option>
                                         @endif
+                                        @if(\App\BusinessSetting::where('type', 'iyzico')->first()->value == 1)
+                                            <option value="iyzico">{{ translate('Iyzico')}}</option>
+                                        @endif
+                                        @if(\App\BusinessSetting::where('type', 'nagad')->first()->value == 1)
+                                            <option value="nagad">{{ translate('Nagad')}}</option>
+                                        @endif
+                                        @if(\App\BusinessSetting::where('type', 'bkash')->first()->value == 1)
+                                            <option value="bkash">{{ translate('Bkash')}}</option>
+                                        @endif
                                         @if(\App\Addon::where('unique_identifier', 'african_pg')->first() != null && \App\Addon::where('unique_identifier', 'african_pg')->first()->activated)
                                             @if(\App\BusinessSetting::where('type', 'mpesa')->first()->value == 1)
                                                 <option value="mpesa">{{ translate('Mpesa')}}</option>

@@ -13,14 +13,20 @@
                     <th>#</th>
                     <th>{{translate('Email')}}</th>
                     <th>{{translate('Date')}}</th>
+                    <th class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($subscribers as $key => $subscriber)
                   <tr>
                       <td>{{ ($key+1) + ($subscribers->currentPage() - 1)*$subscribers->perPage() }}</td>
-											<td>{{ $subscriber->email }}</td>
+					  <td>{{ $subscriber->email }}</td>
                       <td>{{ date('d-m-Y', strtotime($subscriber->created_at)) }}</td>
+                      <td class="text-right">
+                          <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('subscriber.destroy', $subscriber->id)}}" title="{{ translate('Delete') }}">
+                              <i class="las la-trash"></i>
+                          </a>
+                      </td>
                   </tr>
                 @endforeach
             </tbody>
@@ -32,4 +38,8 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('modal')
+    @include('modals.delete_modal')
 @endsection

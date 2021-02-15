@@ -65,7 +65,7 @@
 
                     <div class="card">
                         <div class="card-header row gutters-5">
-                            <div class="col text-center text-md-left">
+                            <div class="col">
                                 <h5 class="mb-md-0 h6">{{ translate('All Products') }}</h5>
                             </div>
                             <div class="col-md-3">
@@ -128,7 +128,7 @@
                                             </td>
                                             <td>
                                                 <label class="aiz-switch aiz-switch-success mb-0">
-                                                    <input onchange="update_featured(this)" value="{{ $product->id }}" type="checkbox" <?php if($product->featured == 1) echo "checked";?> >
+                                                    <input onchange="update_featured(this)" value="{{ $product->id }}" type="checkbox" <?php if($product->seller_featured == 1) echo "checked";?> >
                                                     <span class="slider round"></span>
                                                 </label>
                                             </td>
@@ -173,7 +173,7 @@
             else{
                 var status = 0;
             }
-            $.post('{{ route('products.featured') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+            $.post('{{ route('products.seller.featured') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Featured products updated successfully') }}');
                 }

@@ -31,7 +31,7 @@
 <div class="form-group row">
    <label class="col-lg-3 col-from-label">{{translate('Discount')}}</label>
    <div class="col-lg-7">
-      <input type="number" min="0" step="0.01" placeholder="{{translate('Discount')}}" name="discount" class="form-control" required>
+      <input type="number" lang="en" min="0" step="0.01" placeholder="{{translate('Discount')}}" name="discount" class="form-control" required>
    </div>
    <div class="col-lg-2">
        <select class="form-control aiz-selectpicker" name="discount_type">

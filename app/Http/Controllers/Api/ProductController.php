@@ -91,7 +91,7 @@ class ProductController extends Controller
     public function related($id)
     {
         $product = Product::find($id);
-        return new ProductCollection(Product::where('subcategory_id', $product->subcategory_id)->where('id', '!=', $id)->limit(10)->get());
+        return new ProductCollection(Product::where('category_id', $product->category_id)->where('id', '!=', $id)->limit(10)->get());
     }
 
     public function topFromSeller($id)

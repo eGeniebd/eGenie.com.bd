@@ -18,10 +18,10 @@
                                     <tr>
                                         <th>#</th>
                                         <th>{{ translate('Product')}}</th>
-                                        <th>{{ translate('Customer')}}</th>
+                                        <th data-breakpoints="lg">{{ translate('Customer')}}</th>
                                         <th>{{ translate('Rating')}}</th>
-                                        <th>{{ translate('Comment')}}</th>
-                                        <th>{{ translate('Published')}}</th>
+                                        <th data-breakpoints="lg">{{ translate('Comment')}}</th>
+                                        <th data-breakpoints="lg">{{ translate('Published')}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>

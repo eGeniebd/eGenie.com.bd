@@ -36,7 +36,7 @@
                         <label>{{translate('Amount')}} <span class="text-danger">*</span></label>
                     </div>
                     <div class="col-md-9">
-                        <input type="number" class="form-control mb-3" min="0" name="amount" placeholder="{{ translate('Amount') }}" required>
+                        <input type="number" lang="en" class="form-control mb-3" min="0" name="amount" placeholder="{{ translate('Amount') }}" required>
                     </div>
                 </div>
 

@@ -7,8 +7,8 @@
         <div class="row">
             <div class="col-xl-8 mx-auto">
                 <div class="row aiz-steps arrow-divider">
-                    <div class="col">
-                        <div class="text-center active text-primary">
+                    <div class="col active">
+                        <div class="text-center text-primary">
                             <i class="la-3x mb-2 las la-shopping-cart"></i>
                             <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('1. My Cart')}}</h3>
                         </div>
@@ -74,7 +74,7 @@
                                     <li class="list-group-item px-0 px-lg-3">
                                         <div class="row gutters-5">
                                             <div class="col-lg-5 d-flex">
-                                                <span class="mr-2">
+                                                <span class="mr-2 ml-0">
                                                     <img
                                                         src="{{ uploaded_asset($product->thumbnail_img) }}"
                                                         class="img-fit size-60px rounded"

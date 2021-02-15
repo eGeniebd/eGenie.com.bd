@@ -90,9 +90,9 @@
 								<td>
 									{{ ini_get('max_file_uploads') }}
 								</td>
-								<td>60+</td>
+								<td>20+</td>
 								<td>
-									@if (ini_get('max_file_uploads') >= 60)
+									@if (ini_get('max_file_uploads') >= 20)
 										<i class="las la-check text-success"></i>
 									@else
 										<i class="las la-times text-danger"></i>
@@ -148,11 +148,15 @@
 							<tr>
 								<td>max_execution_time</td>
 								<td>
-									{{ ini_get('max_execution_time') }}
+									@if(ini_get('max_execution_time') == '-1')
+										Unlimited
+									@else
+										{{ ini_get('max_execution_time') }}
+									@endif
 								</td>
 								<td>120+</td>
 								<td>
-									@if (ini_get('max_execution_time') >= 120)
+									@if (ini_get('max_execution_time') == -1 || ini_get('max_execution_time') >= 120)
 										<i class="las la-check text-success"></i>
 									@else
 										<i class="las la-times text-danger"></i>
@@ -162,11 +166,15 @@
 							<tr>
 								<td>max_input_time</td>
 								<td>
-									{{ ini_get('max_input_time') }}
+									@if(ini_get('max_input_time') == '-1')
+										Unlimited
+									@else
+										{{ ini_get('max_input_time') }}
+									@endif
 								</td>
 								<td>120+</td>
 								<td>
-									@if (ini_get('max_input_time') >= 120)
+									@if (ini_get('max_input_time') == -1 || ini_get('max_input_time') >= 120)
 										<i class="las la-check text-success"></i>
 									@else
 										<i class="las la-times text-danger"></i>

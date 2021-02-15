@@ -317,7 +317,7 @@ class OrderController extends Controller
 
                 if($product_variation != null){
                     $product_stock = $product->stocks->where('variant', $product_variation)->first();
-                    if($cartItem['quantity'] > $product_stock->qty){
+                    if($product->digital != 1 &&  $cartItem['quantity'] > $product_stock->qty){
                         flash(translate('The requested quantity is not available for ').$product->getTranslation('name'))->warning();
                         $order->delete();
                         return redirect()->route('cart')->send();
@@ -328,7 +328,7 @@ class OrderController extends Controller
                     }
                 }
                 else {
-                    if ($cartItem['quantity'] > $product->current_stock) {
+                    if ($product->digital != 1 && $cartItem['quantity'] > $product->current_stock) {
                         flash(translate('The requested quantity is not available for ').$product->getTranslation('name'))->warning();
                         $order->delete();
                         return redirect()->route('cart')->send();
@@ -350,7 +350,13 @@ class OrderController extends Controller
                 $order_detail->product_referral_code = $cartItem['product_referral_code'];
 
                 //Dividing Shipping Costs
-                $order_detail->shipping_cost = getShippingCost($key);
+                if ($cartItem['shipping_type'] == 'home_delivery') {
+                    $order_detail->shipping_cost = getShippingCost($key);
+                }
+                else {
+                    $order_detail->shipping_cost = 0;
+                }
+                
                 $shipping += $order_detail->shipping_cost;
 
                 if ($cartItem['shipping_type'] == 'pickup_point') {
@@ -380,7 +386,7 @@ class OrderController extends Controller
             $order->save();
 
             $array['view'] = 'emails.invoice';
-            $array['subject'] = 'Your order has been placed - '.$order->code;
+            $array['subject'] = translate('Your order has been placed').' - '.$order->code;
             $array['from'] = env('MAIL_USERNAME');
             $array['order'] = $order;
 
@@ -457,18 +463,23 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         if($order != null){
             foreach($order->orderDetails as $key => $orderDetail){
-                if ($orderDetail->variantion != null) {
-                    $product_stock = ProductStock::where('product_id', $orderDetail->product_id)->where('variant', $orderDetail->variantion)->first();
-                    if($product_stock != null){
-                        $product_stock->qty += $orderDetail->quantity;
-                        $product_stock->save();
+                try {
+                    if ($orderDetail->variantion != null) {
+                        $product_stock = ProductStock::where('product_id', $orderDetail->product_id)->where('variant', $orderDetail->variantion)->first();
+                        if($product_stock != null){
+                            $product_stock->qty += $orderDetail->quantity;
+                            $product_stock->save();
+                        }
                     }
+                    else {
+                        $product = $orderDetail->product;
+                        $product->current_stock += $orderDetail->quantity;
+                        $product->save();
+                    }
+                } catch (\Exception $e) {
+
                 }
-                else {
-                    $product = $orderDetail->product;
-                    $product->current_stock += $orderDetail->quantity;
-                    $product->save();
-                }
+
                 $orderDetail->delete();
             }
             $order->delete();

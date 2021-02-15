@@ -40,18 +40,18 @@
                         </form>
 
                         @if (count($orders) > 0)
-                            <div class="card-body">
+                            <div class="card-body p-3">
                                 <table class="table aiz-table mb-0">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th width="20%">{{ translate('Order Code')}}</th>
-                                            <th>{{ translate('Num. of Products')}}</th>
-                                            <th>{{ translate('Customer')}}</th>
-                                            <th>{{ translate('Amount')}}</th>
-                                            <th>{{ translate('Delivery Status')}}</th>
+                                            <th>{{ translate('Order Code')}}</th>
+                                            <th data-breakpoints="lg">{{ translate('Num. of Products')}}</th>
+                                            <th data-breakpoints="lg">{{ translate('Customer')}}</th>
+                                            <th data-breakpoints="md">{{ translate('Amount')}}</th>
+                                            <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
                                             <th>{{ translate('Payment Status')}}</th>
-                                            <th>{{ translate('Options')}}</th>
+                                            <th class="text-right">{{ translate('Options')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>

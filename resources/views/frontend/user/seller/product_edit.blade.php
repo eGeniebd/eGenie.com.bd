@@ -45,10 +45,12 @@
                                 <div class="form-group row" id="category">
                                     <label class="col-lg-3 col-from-label">{{translate('Category')}}</label>
                                     <div class="col-lg-8">
-                                        <select class="form-control aiz-selectpicker" name="category_id" id="category_id" required>
-                                            <option>{{ translate('Select an option') }}</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{$category->id}}" <?php if($product->category_id == $category->id) echo "selected"; ?> >{{ $category->getTranslation('name') }}</option>
+                                        <select class="form-control aiz-selectpicker" name="category_id" id="category_id" data-selected={{ $product->category_id }} required>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
+                                                @foreach ($category->childrenCategories as $childCategory)
+                                                    @include('categories.child_category', ['child_category' => $childCategory])
+                                                @endforeach
                                             @endforeach
                                         </select>
                                     </div>
@@ -73,7 +75,7 @@
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-from-label">{{translate('Minimum Qty')}}</label>
                                     <div class="col-lg-8">
-                                        <input type="number" class="form-control" name="min_qty" value="@if($product->min_qty <= 1){{1}}@else{{$product->min_qty}}@endif" min="1" required>
+                                        <input type="number" lang="en" class="form-control" name="min_qty" value="@if($product->min_qty <= 1){{1}}@else{{$product->min_qty}}@endif" min="1" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -278,13 +280,13 @@
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-from-label">{{translate('Purchase price')}}</label>
                                     <div class="col-lg-6">
-                                        <input type="number" min="0" step="0.01" placeholder="{{translate('Purchase price')}}" name="purchase_price" class="form-control" value="{{$product->purchase_price}}" required>
+                                        <input type="number" lang="en" min="0" step="0.01" placeholder="{{translate('Purchase price')}}" name="purchase_price" class="form-control" value="{{$product->purchase_price}}" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-from-label">{{translate('Tax')}}</label>
                                     <div class="col-lg-6">
-                                        <input type="number" min="0" step="0.01" placeholder="{{translate('tax')}}" name="tax" class="form-control" value="{{$product->tax}}" required>
+                                        <input type="number" lang="en" min="0" step="0.01" placeholder="{{translate('tax')}}" name="tax" class="form-control" value="{{$product->tax}}" required>
                                     </div>
                                     <div class="col-lg-3">
                                         <select class="form-control aiz-selectpicker" name="tax_type" required>
@@ -296,7 +298,7 @@
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-from-label">{{translate('Discount')}}</label>
                                     <div class="col-lg-6">
-                                        <input type="number" min="0" step="0.01" placeholder="{{translate('Discount')}}" name="discount" class="form-control" value="{{ $product->discount }}" required>
+                                        <input type="number" lang="en" min="0" step="0.01" placeholder="{{translate('Discount')}}" name="discount" class="form-control" value="{{ $product->discount }}" required>
                                     </div>
                                     <div class="col-lg-3">
                                         <select class="form-control aiz-selectpicker" name="discount_type" required>
@@ -308,7 +310,7 @@
                                 <div class="form-group row" id="quantity">
                                     <label class="col-lg-3 col-from-label">{{translate('Quantity')}}</label>
                                     <div class="col-lg-6">
-                                        <input type="number" value="{{ $product->current_stock }}" step="1" placeholder="{{translate('Quantity')}}" name="current_stock" class="form-control" required>
+                                        <input type="number" lang="en" value="{{ $product->current_stock }}" step="1" placeholder="{{translate('Quantity')}}" name="current_stock" class="form-control" required>
                                     </div>
                                 </div>
                                 <br>
@@ -374,7 +376,7 @@
                                             <div class="form-group row">
                                                 <label class="col-lg-3 col-from-label">{{translate('Shipping cost')}}</label>
                                                 <div class="col-lg-8">
-                                                    <input type="number" min="0" value="{{ $product->shipping_cost }}" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
+                                                    <input type="number" lang="en" min="0" value="{{ $product->shipping_cost }}" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>

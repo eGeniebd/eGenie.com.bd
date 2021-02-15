@@ -9,31 +9,31 @@
             <div class="row">
                 <div class="col-xl-8 mx-auto">
                     <div class="row aiz-steps arrow-divider">
-                        <div class="col">
+                        <div class="col done">
                             <div class="text-center text-success">
                                 <i class="la-3x mb-2 las la-shopping-cart"></i>
                                 <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('1. My Cart')}}</h3>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col done">
                             <div class="text-center text-success">
                                 <i class="la-3x mb-2 las la-map"></i>
                                 <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('2. Shipping info')}}</h3>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col done">
                             <div class="text-center text-success">
                                 <i class="la-3x mb-2 las la-truck"></i>
                                 <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('3. Delivery info')}}</h3>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col done">
                             <div class="text-center text-success">
                                 <i class="la-3x mb-2 las la-credit-card"></i>
                                 <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('4. Payment')}}</h3>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col active">
                             <div class="text-center text-primary">
                                 <i class="la-3x mb-2 las la-check-circle"></i>
                                 <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('5. Confirmation')}}</h3>
@@ -87,7 +87,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="w-50 fw-600">{{ translate('Order status')}}:</td>
-                                                <td>{{ ucfirst(str_replace('_', ' ', $status)) }}</td>
+                                                <td>{{ translate(ucfirst(str_replace('_', ' ', $status))) }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="w-50 fw-600">{{ translate('Total order amount')}}:</td>

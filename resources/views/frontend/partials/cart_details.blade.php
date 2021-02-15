@@ -27,7 +27,7 @@
                             <li class="list-group-item px-0 px-lg-3">
                                 <div class="row gutters-5">
                                     <div class="col-lg-5 d-flex">
-                                        <span class="mr-2">
+                                        <span class="mr-2 ml-0">
                                             <img
                                                 src="{{ uploaded_asset($product->thumbnail_img) }}"
                                                 class="img-fit size-60px rounded"
@@ -48,7 +48,7 @@
 
                                     <div class="col-lg col-6 order-4 order-lg-0">
                                         @if($cartItem['digital'] != 1)
-                                            <div class="row no-gutters align-items-center aiz-plus-minus mr-3">
+                                            <div class="row no-gutters align-items-center aiz-plus-minus mr-2 ml-0">
                                                 <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field="quantity[{{ $key }}]">
                                                     <i class="las la-minus"></i>
                                                 </button>

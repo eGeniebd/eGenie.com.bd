@@ -141,6 +141,36 @@
     				</form>
     			</div>
     		</div>
+            <div class="card">
+    			<div class="card-header">
+    				<h6 class="fw-600 mb-0">{{ translate('Custom Script') }}</h6>
+    			</div>
+    			<div class="card-body">
+    				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
+    					@csrf
+    					<div class="form-group row">
+    						<label class="col-md-3 col-from-label">{{ translate('Header custom script - before </head>') }}</label>
+                            <div class="col-md-8">
+        						<input type="hidden" name="types[]" value="header_script">
+        						<textarea name="header_script" rows="4" class="form-control" placeholder="<script>&#10;...&#10;</script>">{{ get_setting('header_script') }}</textarea>
+                                <small>{{ translate('Write script with <script> tag') }}</small>
+                            </div>
+    					</div>
+    					@csrf
+    					<div class="form-group row">
+    						<label class="col-md-3 col-from-label">{{ translate('Footer custom script - before </body>') }}</label>
+                            <div class="col-md-8">
+        						<input type="hidden" name="types[]" value="footer_script">
+        						<textarea name="footer_script" rows="4" class="form-control" placeholder="<script>&#10;...&#10;</script>">{{ get_setting('footer_script') }}</textarea>
+                                <small>{{ translate('Write script with <script> tag') }}</small>
+                            </div>
+    					</div>
+    					<div class="text-right">
+    						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+    					</div>
+    				</form>
+    			</div>
+    		</div>
     	</div>
     </div>
 

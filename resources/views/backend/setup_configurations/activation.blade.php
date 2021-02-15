@@ -330,65 +330,7 @@
             </div>
         </div>
     </div>
-    @if(\App\Addon::where('unique_identifier', 'african_pg')->first() != null && \App\Addon::where('unique_identifier', 'african_pg')->first()->activated)
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0 h6 text-center">{{translate('MPesa Activation')}}</h3>
-            </div>
-            <div class="card-body text-center">
-                <div class="clearfix">
-                    <img class="float-left" src="{{ static_asset('assets/img/cards/mpesa.png') }}" height="30">
-                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                        <input type="checkbox" onchange="updateSettings(this, 'mpesa')" <?php if(\App\BusinessSetting::where('type', 'mpesa')->first()->value == 1) echo "checked";?>>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="alert" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
-                    {{ translate('You need to configure Mpesa correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0 h6 text-center">{{translate('flutterwave Activation')}}</h3>
-            </div>
-            <div class="card-body text-center">
-                <div class="clearfix">
-                    <img class="float-left" src="{{ static_asset('assets/img/cards/flutterwave.png') }}" height="30">
-                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                        <input type="checkbox" onchange="updateSettings(this, 'flutterwave')" <?php if(\App\BusinessSetting::where('type', 'flutterwave')->first()->value == 1) echo "checked";?>>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="alert" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
-                    {{ translate('You need to configure flutterwave correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0 h6 text-center">{{translate('Payfast Activation')}}</h3>
-            </div>
-            <div class="card-body text-center">
-                <div class="clearfix">
-                    <img class="float-left" src="{{ static_asset('assets/img/cards/payfast.png') }}" height="30">
-                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
-                        <input type="checkbox" onchange="updateSettings(this, 'payfast')" <?php if(\App\BusinessSetting::where('type', 'payfast')->first()->value == 1) echo "checked";?>>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="alert" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
-                    {{ translate('You need to configure payfast correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
+
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
@@ -408,6 +350,67 @@
             </div>
         </div>
     </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0 h6 text-center">{{translate('Iyzico Activation')}}</h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="clearfix">
+                    <img class="float-left" src="{{ static_asset('assets/img/cards/iyzico.png') }}" height="30">
+                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
+                        <input type="checkbox" onchange="updateSettings(this, 'iyzico')" <?php if(\App\BusinessSetting::where('type', 'iyzico')->first()->value == 1) echo "checked";?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="alert" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
+                    {{ translate('You need to configure iyzico correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0 h6 text-center">{{translate('Bkash Activation')}}</h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="clearfix">
+                    <img class="float-left" src="{{ static_asset('assets/img/cards/bkash.png') }}" height="30">
+                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
+                        <input type="checkbox" onchange="updateSettings(this, 'bkash')" <?php if(\App\BusinessSetting::where('type', 'bkash')->first()->value == 1) echo "checked";?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="alert" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
+                    {{ translate('You need to configure bkash correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0 h6 text-center">{{translate('Nagad Activation')}}</h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="clearfix">
+                    <img class="float-left" src="{{ static_asset('assets/img/cards/nagad.png') }}" height="30">
+                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
+                        <input type="checkbox" onchange="updateSettings(this, 'nagad')" <?php if(\App\BusinessSetting::where('type', 'nagad')->first()->value == 1) echo "checked";?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="alert" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
+                    {{ translate('You need to configure nagad correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">

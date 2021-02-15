@@ -43,7 +43,7 @@
           <div class="form-group row">
               <label class="col-md-3 col-from-label" for="amount">{{translate('Amount')}}</label>
               <div class="col-md-9">
-                  <input type="number" min="0" step="0.01" name="amount" id="amount" value="{{ $seller->admin_to_pay }}" class="form-control" required>
+                  <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ $seller->admin_to_pay }}" class="form-control" required>
               </div>
           </div>
 
@@ -71,7 +71,7 @@
           <div class="form-group row">
               <label class="col-md-3 col-from-label" for="amount">{{translate('Amount')}}</label>
               <div class="col-md-9">
-                  <input type="number" min="0" step="0.01" name="amount" id="amount" value="{{ abs($seller->admin_to_pay) }}" class="form-control" required>
+                  <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ abs($seller->admin_to_pay) }}" class="form-control" required>
               </div>
           </div>
           <div class="form-group row" id="txn_div">

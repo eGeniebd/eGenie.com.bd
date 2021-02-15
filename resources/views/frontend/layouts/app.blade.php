@@ -20,7 +20,7 @@
 
     @yield('meta')
 
-    @if(!isset($detailedProduct) && !isset($shop) && !isset($page))
+    @if(!isset($detailedProduct) && !isset($customer_product) && !isset($shop) && !isset($page))
     <!-- Schema.org markup for Google+ -->
     <meta itemprop="name" content="{{ config('app.name', 'Laravel') }}">
     <meta itemprop="description" content="{{ get_setting('meta_description') }}">
@@ -48,7 +48,7 @@
     <link rel="icon" href="{{ uploaded_asset(get_setting('site_icon')) }}">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
@@ -106,6 +106,10 @@
     </noscript>
     <!-- End Facebook Pixel Code -->
 @endif
+
+@php
+    echo get_setting('header_script');
+@endphp
 
 </head>
 <body>
@@ -567,6 +571,10 @@
     </script>
 
     @yield('script')
+
+    @php
+        echo get_setting('footer_script');
+    @endphp
 
 </body>
 </html>

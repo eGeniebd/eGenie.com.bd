@@ -270,6 +270,13 @@
                     </li>
                 @endif
 
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('uploaded-files.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['uploaded-files.create'])}}">
+                        <i class="las la-folder-open aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Uploaded Files') }}</span>
+                    </a>
+                </li>
+
                 <!-- Reports -->
                 @if(Auth::user()->user_type == 'admin' || in_array('10', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
@@ -547,6 +554,30 @@
                   @endif
                 @endif
 
+                @if(\App\Addon::where('unique_identifier', 'african_pg')->first() != null && \App\Addon::where('unique_identifier', 'african_pg')->first()->activated)
+                  @if(Auth::user()->user_type == 'admin' || in_array('19', json_decode(Auth::user()->staff->role->permissions)))
+                      <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-phone aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{translate('African Payment Gateway Addon')}}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('african.configuration') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{translate('African PG Configurations')}}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{route('african_credentials.index')}}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{translate('Set African PG Credentials')}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                  @endif
+                @endif
+
                 <!-- Website Setup -->
                 @if(Auth::user()->user_type == 'admin' || in_array('13', json_decode(Auth::user()->staff->role->permissions)))
                   <li class="aiz-side-nav-item">
@@ -658,6 +689,11 @@
                         <li class="aiz-side-nav-item">
                             <a href="{{route('countries.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['countries.index','countries.edit','countries.update'])}}">
                                 <span class="aiz-side-nav-text">{{translate('Shipping Countries')}}</span>
+                            </a>
+                        </li>
+                        <li class="aiz-side-nav-item">
+                            <a href="{{route('cities.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['cities.index','cities.edit','cities.update'])}}">
+                                <span class="aiz-side-nav-text">{{translate('Shipping Cities')}}</span>
                             </a>
                         </li>
                     </ul>

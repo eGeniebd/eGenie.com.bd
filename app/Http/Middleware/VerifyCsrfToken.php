@@ -19,17 +19,13 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
      protected $except = [
-         '/sslcommerz/success',
-         '/sslcommerz/cancel',
-         '/sslcommerz/fail',
-         '/sslcommerz/ipn',
+         '/sslcommerz*',
          '/config_content',
          '/paytm*',
          '/payhere*',
          '/stripe*',
          '/iyzico*',
-         '/payfast/checkout/notify',
-         '/payfast/wallet/notify',
-         '/payfast/customer_package_payment/notify'
+         '/payfast*',
+         '/bkash*'
      ];
 }

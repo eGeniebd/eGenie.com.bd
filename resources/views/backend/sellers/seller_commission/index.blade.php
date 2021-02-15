@@ -16,7 +16,7 @@
                         <label class="col-lg-3 control-label">{{ translate('Seller Commission') }}</label>
                         <div class="col-lg-9">
                             <div class="input-group">
-                                <input type="number" min="0" step="0.01" value="{{ $business_settings->value }}" placeholder="{{translate('Seller Commission')}}" name="value" class="form-control">
+                                <input type="number" lang="en" min="0" step="0.01" value="{{ $business_settings->value }}" placeholder="{{translate('Seller Commission')}}" name="value" class="form-control">
                                 <div class="input-group-append">
                                     <span class="input-group-text">%</span>
                                 </div>

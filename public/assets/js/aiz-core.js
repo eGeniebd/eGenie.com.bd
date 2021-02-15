@@ -413,24 +413,24 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                             data[i].selected +
                             '">' +
                             '<div class="aiz-file-box">' +
-                            '<div class="dropdown-file">' +
-                            '<a class="dropdown-link" data-toggle="dropdown">' +
-                            '<i class="la la-ellipsis-v"></i>' +
-                            "</a>" +
-                            '<div class="dropdown-menu dropdown-menu-right">' +
-                            '<a href="' +
-                            AIZ.data.fileBaseUrl +
-                            data[i].file_name +
-                            '" target="_blank" download="' +
-                            data[i].file_original_name +
-                            "." +
-                            data[i].extension +
-                            '" class="dropdown-item"><i class="la la-download mr-2"></i>Download</a>' +
+                            // '<div class="dropdown-file">' +
+                            // '<a class="dropdown-link" data-toggle="dropdown">' +
+                            // '<i class="la la-ellipsis-v"></i>' +
+                            // "</a>" +
+                            // '<div class="dropdown-menu dropdown-menu-right">' +
+                            // '<a href="' +
+                            // AIZ.data.fileBaseUrl +
+                            // data[i].file_name +
+                            // '" target="_blank" download="' +
+                            // data[i].file_original_name +
+                            // "." +
+                            // data[i].extension +
+                            // '" class="dropdown-item"><i class="la la-download mr-2"></i>Download</a>' +
                             // '<a href="#" class="dropdown-item aiz-uploader-delete" data-id="' +
                             // data[i].id +
                             // '"><i class="la la-trash mr-2"></i>Delete</a>' +
-                            "</div>" +
-                            "</div>" +
+                            // "</div>" +
+                            // "</div>" +
                             '<div class="card card-file aiz-uploader-select" title="' +
                             data[i].file_original_name +
                             "." +
@@ -831,9 +831,16 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
         bootstrapSelect: function (refresh = "") {
             $(".aiz-selectpicker").each(function (el) {
                 var $this = $(this);
-                $this.selectpicker({
-                    size: 5,
-                });
+                if(!$this.parent().hasClass('bootstrap-select')){
+                    var selected = $this.data('selected');
+                    if( typeof selected !== 'undefined' ){
+                        $this.val(selected);
+                    }
+                    $this.selectpicker({
+                        size: 5,                    
+                        virtualScroll: false
+                    });
+                }
                 if (refresh === "refresh") {
                     $this.selectpicker("refresh");
                 }
@@ -1146,25 +1153,31 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 var slidesFade = $this.data("fade");
                 var asNavFor = $this.data("nav-for");
                 var infinite = $this.data("infinite");
-                var vertical = $this.data("vertical");
                 var focusOnSelect = $this.data("focus-select");
 
+
+                var vertical = $this.data("vertical");
+                var verticalXs = $this.data("vertical-xs");
+                var verticalSm = $this.data("vertical-sm");
+                var verticalMd = $this.data("vertical-md");
+                var verticalLg = $this.data("vertical-lg");
+                var verticalXl = $this.data("vertical-xl");
+
                 slidesPerView = !slidesPerView ? 1 : slidesPerView;
-                slidesPerViewXl = !slidesPerViewXl
-                    ? slidesPerView
-                    : slidesPerViewXl;
-                slidesPerViewLg = !slidesPerViewLg
-                    ? slidesPerViewXl
-                    : slidesPerViewLg;
-                slidesPerViewMd = !slidesPerViewMd
-                    ? slidesPerViewLg
-                    : slidesPerViewMd;
-                slidesPerViewSm = !slidesPerViewSm
-                    ? slidesPerViewMd
-                    : slidesPerViewSm;
-                slidesPerViewXs = !slidesPerViewXs
-                    ? slidesPerViewSm
-                    : slidesPerViewXs;
+                slidesPerViewXl = !slidesPerViewXl ? slidesPerView : slidesPerViewXl;
+                slidesPerViewLg = !slidesPerViewLg ? slidesPerViewXl : slidesPerViewLg;
+                slidesPerViewMd = !slidesPerViewMd ? slidesPerViewLg : slidesPerViewMd;
+                slidesPerViewSm = !slidesPerViewSm ? slidesPerViewMd : slidesPerViewSm;
+                slidesPerViewXs = !slidesPerViewXs ? slidesPerViewSm : slidesPerViewXs;
+
+
+                vertical = !vertical ? false : vertical;
+                verticalXl = (typeof verticalXl == 'undefined') ? vertical : verticalXl;
+                verticalLg = (typeof verticalLg == 'undefined') ? verticalXl : verticalLg;
+                verticalMd = (typeof verticalMd == 'undefined') ? verticalLg : verticalMd;
+                verticalSm = (typeof verticalSm == 'undefined') ? verticalMd : verticalSm;
+                verticalXs = (typeof verticalXs == 'undefined') ? verticalSm : verticalXs;
+
 
                 slidesCenterMode = !slidesCenterMode ? false : slidesCenterMode;
                 slidesArrows = !slidesArrows ? false : slidesArrows;
@@ -1174,13 +1187,12 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 slidesFade = !slidesFade ? false : slidesFade;
                 asNavFor = !asNavFor ? null : asNavFor;
                 infinite = !infinite ? false : infinite;
-                vertical = !vertical ? false : vertical;
                 focusOnSelect = !focusOnSelect ? false : focusOnSelect;
+
 
                 if ($("html").attr("dir") === "rtl") {
                     slidesRtl = true;
                 }
-
                 $this.slick({
                     slidesToShow: slidesPerView,
                     autoplay: slidesAutoplay,
@@ -1205,30 +1217,35 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                             breakpoint: 1500,
                             settings: {
                                 slidesToShow: slidesPerViewXl,
+                                vertical: verticalXl,
                             },
                         },
                         {
                             breakpoint: 1200,
                             settings: {
                                 slidesToShow: slidesPerViewLg,
+                                vertical: verticalLg,
                             },
                         },
                         {
                             breakpoint: 992,
                             settings: {
                                 slidesToShow: slidesPerViewMd,
+                                vertical: verticalMd,
                             },
                         },
                         {
                             breakpoint: 768,
                             settings: {
                                 slidesToShow: slidesPerViewSm,
+                                vertical: verticalSm,
                             },
                         },
                         {
                             breakpoint: 576,
                             settings: {
                                 slidesToShow: slidesPerViewXs,
+                                vertical: verticalXs,
                             },
                         },
                     ],

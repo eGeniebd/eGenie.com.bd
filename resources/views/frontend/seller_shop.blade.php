@@ -127,7 +127,7 @@
     @if (!isset($type))
         <section class="mb-5">
             <div class="container">
-                <div class="aiz-carousel dots-inside-bottom" data-arrows="true" data-dots="true" data-autoplay="true">
+                <div class="aiz-carousel dots-inside-bottom mobile-img-auto-height" data-arrows="true" data-dots="true" data-autoplay="true">
                     @if ($shop->sliders != null)
                         @foreach (explode(',',$shop->sliders) as $key => $slide)
                             <div class="carousel-box">
@@ -148,7 +148,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="aiz-carousel gutters-10" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-autoplay='true' data-infinute="true" data-dots="true">
-                            @foreach ($shop->user->products->where('published', 1)->where('featured', 1) as $key => $product)
+                            @foreach ($shop->user->products->where('published', 1)->where('seller_featured', 1) as $key => $product)
                                 <div class="carousel-box">
                                     <div class="aiz-card-box border bg-white border-light rounded shadow-sm hov-shadow-md my-2 has-transition">
                                         <div class="position-relative">

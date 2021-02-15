@@ -33,6 +33,7 @@
                     <th>#</th>
                     <th>{{translate('Name')}}</th>
 					<th>{{ translate('Parent Category') }}</th>
+					<th>{{ translate('Level') }}</th>
                     <th>{{translate('Banner')}}</th>
                     <th>{{translate('Icon')}}</th>
                     <th>{{translate('Featured')}}</th>
@@ -55,6 +56,7 @@
                                 —
                             @endif
                         </td>
+						<td>{{ $category->level }}</td>
                         <td>
                             @if($category->banner != null)
                                 <img src="{{ uploaded_asset($category->banner) }}" alt="{{translate('Banner')}}" class="h-50px">

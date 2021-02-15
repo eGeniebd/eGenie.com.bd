@@ -27,6 +27,10 @@
                         <input id="seller-shipping" class="magic-radio" type="radio" name="shipping_type" value="seller_wise_shipping" <?php if(\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') echo "checked";?>>
                         <label for="seller-shipping">{{translate('Seller Wise Flat Shipping Cost')}}</label>
                     </div>
+                    <div class="radio mar-btm">
+                        <input id="area-shipping" class="magic-radio" type="radio" name="shipping_type" value="area_wise_shipping" <?php if(\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'area_wise_shipping') echo "checked";?>>
+                        <label for="area-shipping">{{translate('Area Wise Flat Shipping Cost')}}</label>
+                    </div>
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>
@@ -48,7 +52,10 @@
                         2. {{ translate('Flat Rate Shipping Cost calulation: How many products a customer purchase, doesn\'t matter. Shipping cost is fixed') }}.
                     </li>
                     <li class="list-group-item">
-                        3. {{ translate('Seller Wise Flat Shipping Cost calulation: Fixed rate for each seller. If a customer purchase 2 product from two seller shipping cost is calculate by addition of each seller flat shipping cost') }}.
+                        3. {{ translate('Seller Wise Flat Shipping Cost calulation: Fixed rate for each seller. If customers purchase 2 product from two seller shipping cost is calculated by addition of each seller flat shipping cost') }}.
+                    </li>
+                    <li class="list-group-item">
+                        4. {{ translate('Area Wise Flat Shipping Cost calulation: Fixed rate for each area. If customers purchase multiple products from one seller shipping cost is calculated by the customer shipping area. To configure area wise shipping cost go to ') }} <a href="{{ route('cities.index') }}">{{ translate('Shipping Cities') }}</a>.
                     </li>
                 </ul>
             </div>

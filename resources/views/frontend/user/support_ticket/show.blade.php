@@ -48,13 +48,17 @@
                                     @foreach($ticket->ticketreplies as $ticketreply)
                                         {{-- @if($ticket->user_id == $ticketreply->user_id)
                                         @endif --}}
-                                        <li class="list-group-item">
+                                        <li class="list-group-item px-0">
                                             <div class="media">
                                                 <a class="media-left" href="#">
                                                     @if($ticketreply->user->avatar_original != null)
-                                                        <span class="avatar avatar-sm m-3"><img src="{{ uploaded_asset($ticketreply->user->avatar_original) }}"></span>
+                                                        <span class="avatar avatar-sm mr-3">
+                                                            <img src="{{ uploaded_asset($ticketreply->user->avatar_original) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                                                        </span>
                                                     @else
-                                                        <span class="avatar avatar-sm m-3"><img src="{{ static_asset('assets/img/avatar-place.png') }}"></span>
+                                                        <span class="avatar avatar-sm mr-3">
+                                                            <img src="{{ static_asset('assets/img/avatar-place.png') }}">
+                                                        </span>
                                                     @endif
                                                 </a>
                                                 <div class="media-body">
@@ -81,13 +85,17 @@
                                             </div>
                                         </li>
                                     @endforeach
-                                    <li class="list-group-item">
+                                    <li class="list-group-item px-0">
                                         <div class="media">
                                             <a class="media-left" href="#">
                                                 @if($ticket->user->avatar_original != null)
-                                                    <span class="avatar avatar-sm m-3"><img src="{{ uploaded_asset($ticket->user->avatar_original) }}"></span>
+                                                    <span class="avatar avatar-sm mr-3">
+                                                        <img src="{{ uploaded_asset($ticket->user->avatar_original) }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                                                    </span>
                                                 @else
-                                                    <span class="avatar avatar-sm m-3"><img src="{{ static_asset('assets/img/avatar-place.png') }}"></span>
+                                                    <span class="avatar avatar-sm mr-3">
+                                                        <img src="{{ static_asset('assets/img/avatar-place.png') }}">
+                                                    </span>
                                                 @endif
                                             </a>
                                             <div class="media-body">

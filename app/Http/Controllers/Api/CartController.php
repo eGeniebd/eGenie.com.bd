@@ -29,7 +29,6 @@ class CartController extends Controller
         if ($variant == '' && $color == '')
             $price = $product->unit_price;
         else {
-            //$variations = json_decode($product->variations);
             $product_stock = $product->stocks->where('variant', $variant)->first();
             $price = $product_stock->price;
         }

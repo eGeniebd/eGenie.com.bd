@@ -39,7 +39,11 @@
                             <td>{{$staff->user->name}}</td>
                             <td>{{$staff->user->email}}</td>
                             <td>{{$staff->user->phone}}</td>
-                            <td>{{$staff->role->getTranslation('name')}}</td>
+                            <td>
+								@if ($staff->role != null)
+									{{ $staff->role->getTranslation('name') }}
+								@endif
+							</td>
                             <td class="text-right">
 		                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('staffs.edit', encrypt($staff->id))}}" title="{{ translate('Edit') }}">
 		                                <i class="las la-edit"></i>

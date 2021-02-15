@@ -200,12 +200,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <label class="col-md-2 col-form-label">{{ translate('City') }}</label>
-                                <div class="col-md-10">
-                                    <input type="text" class="form-control mb-3" placeholder="{{ translate('Your City')}}" name="city" value="" required>
+                            @if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'area_wise_shipping')
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>{{ translate('City')}}</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <select class="form-control mb-3 aiz-selectpicker" data-live-search="true" name="city" required>
+                                            @foreach (\App\City::get() as $key => $city)
+                                                <option value="{{ $city->name }}">{{ $city->getTranslation('name') }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>{{ translate('City')}}</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control mb-3" placeholder="{{ translate('Your City')}}" name="city" value="" required>
+                                    </div>
+                                </div>
+                            @endif
                             <div class="row">
                                 <label class="col-md-2 col-form-label">{{ translate('Postal code') }}</label>
                                 <div class="col-md-10">

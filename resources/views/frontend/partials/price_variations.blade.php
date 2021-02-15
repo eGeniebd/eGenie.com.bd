@@ -14,7 +14,7 @@
                                     <input class="form-control" type="text" value="{{$options}}" disabled>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input class="form-control" type="number" min="0" step="0.01" name="{{$option->name}}_{{$options}}_price" required>
+                                    <input class="form-control" type="number" lang="en" min="0" step="0.01" name="{{$option->name}}_{{$options}}_price" required>
                                 </div>
                                 <div class="col-sm-4">
                                     <select class="form-control selectpicker" name="{{$option->name}}_{{$options}}_variation">

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use App\Category;
 use App\ProductTranslation;
 use Storage;
 use App\Language;
+use App\Upload;
 use Auth;
 
 class DigitalProductController extends Controller
@@ -35,7 +37,11 @@ class DigitalProductController extends Controller
      */
     public function create()
     {
-        return view('backend.product.digital_products.create');
+        $categories = Category::where('parent_id', 0)
+            ->where('digital', 1)
+            ->with('childrenCategories')
+            ->get();
+        return view('backend.product.digital_products.create', compact('categories'));
     }
 
     /**
@@ -76,10 +82,12 @@ class DigitalProductController extends Controller
         $product->meta_description  = $request->meta_description;
         $product->meta_img          = $request->meta_img;
 
-        if($request->hasFile('file')){
-            $product->file_name = $request->file('file')->getClientOriginalName();
-            $product->file_path = $request->file('file')->store('uploads/products/digital');
-        }
+        // if($request->hasFile('file')){
+        //     $product->file_name = $request->file('file')->getClientOriginalName();
+        //     $product->file_path = $request->file('file')->store('uploads/products/digital');
+        // }
+
+        $product->file_name = $request->file;
 
         $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)).'-'.rand(10000,99999);
 
@@ -131,7 +139,11 @@ class DigitalProductController extends Controller
     {
         $lang = $request->lang;
         $product = Product::findOrFail($id);
-        return view('backend.product.digital_products.edit', compact('product','lang'));
+        $categories = Category::where('parent_id', 0)
+            ->where('digital', 1)
+            ->with('childrenCategories')
+            ->get();
+        return view('backend.product.digital_products.edit', compact('product','lang', 'categories'));
     }
 
     /**
@@ -175,10 +187,12 @@ class DigitalProductController extends Controller
         $product->meta_img          = $request->meta_img;
         $product->slug              = strtolower($request->slug);
 
-        if($request->hasFile('file')){
-            $product->file_name = $request->file('file')->getClientOriginalName();
-            $product->file_path = $request->file('file')->store('uploads/products/digital');
-        }
+        // if($request->hasFile('file')){
+        //     $product->file_name = $request->file('file')->getClientOriginalName();
+        //     $product->file_path = $request->file('file')->store('uploads/products/digital');
+        // }
+
+        $product->file_name = $request->file;
 
         if($product->save()){
 
@@ -239,8 +253,13 @@ class DigitalProductController extends Controller
             }
         }
         if(Auth::user()->user_type == 'admin' || Auth::user()->id == $product->user_id || $downloadable){
-
-            return \Storage::disk('local')->download($product->file_path, $product->file_name);
+            $upload = Upload::findOrFail($product->file_name);
+            if (env('FILESYSTEM_DRIVER') == "s3") {
+                return \Storage::disk('s3')->download($upload->file_name, $upload->file_original_name.".".$upload->extension);
+            }
+            else {
+                return \Storage::disk('local')->download($upload->file_name, $upload->file_original_name.".".$upload->extension);
+            }
         }
         else {
             abort(404);

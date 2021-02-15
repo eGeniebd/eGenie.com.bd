@@ -51,7 +51,7 @@
 				<label for="" class="control-label">{{ $str }}</label>
 			</td>
 			<td>
-				<input type="number" name="price_{{ $str }}" value="@php
+				<input type="number" lang="en" name="price_{{ $str }}" value="@php
                     if ($product->unit_price == $unit_price) {
 						if(($stock = $product->stocks->where('variant', $str)->first()) != null){
 	                        echo $stock->price;
@@ -76,7 +76,7 @@
 				@endphp" class="form-control">
 			</td>
 			<td>
-				<input type="number" name="qty_{{ $str }}" value="@php
+				<input type="number" lang="en" name="qty_{{ $str }}" value="@php
                     if(($stock = $product->stocks->where('variant', $str)->first()) != null){
                         echo $stock->qty;
                     }

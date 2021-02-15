@@ -32,11 +32,11 @@
                               <table class="table aiz-table mb-0">
                                   <thead>
                                       <tr>
-                                          <th>{{ translate('Ticket ID') }}</th>
-                                          <th>{{ translate('Sending Date') }}</th>
+                                          <th data-breakpoints="lg">{{ translate('Ticket ID') }}</th>
+                                          <th data-breakpoints="lg">{{ translate('Sending Date') }}</th>
                                           <th>{{ translate('Subject')}}</th>
                                           <th>{{ translate('Status')}}</th>
-                                          <th>{{ translate('Options')}}</th>
+                                          <th data-breakpoints="lg">{{ translate('Options')}}</th>
                                       </tr>
                                   </thead>
                                   <tbody>

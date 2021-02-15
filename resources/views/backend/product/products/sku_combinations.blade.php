@@ -52,13 +52,13 @@
 					<label for="" class="control-label">{{ $str }}</label>
 				</td>
 				<td>
-					<input type="number" name="price_{{ $str }}" value="{{ $unit_price }}" min="0" step="0.01" class="form-control" required>
+					<input type="number" lang="en" name="price_{{ $str }}" value="{{ $unit_price }}" min="0" step="0.01" class="form-control" required>
 				</td>
 				<td>
 					<input type="text" name="sku_{{ $str }}" value="" class="form-control">
 				</td>
 				<td>
-					<input type="number" name="qty_{{ $str }}" value="10" min="0" step="1" class="form-control" required>
+					<input type="number" lang="en" name="qty_{{ $str }}" value="10" min="0" step="1" class="form-control" required>
 				</td>
 				<td>
 					<button type="button" class="btn btn-icon btn-sm btn-danger" onclick="delete_variant(this)"><i class="las la-trash"></i></button>

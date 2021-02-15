@@ -69,10 +69,10 @@
                                     <tr>
                                         <th>#</th>
                                         <th>{{ translate('Name')}}</th>
-                                        <th>{{ translate('Price')}}</th>
-                                        <th>{{ translate('Available Status')}}</th>
-                                        <th>{{ translate('Admin Status')}}</th>
-                                        <th>{{ translate('Options')}}</th>
+                                        <th data-breakpoints="lg">{{ translate('Price')}}</th>
+                                        <th data-breakpoints="lg">{{ translate('Available Status')}}</th>
+                                        <th data-breakpoints="lg">{{ translate('Admin Status')}}</th>
+                                        <th class="text-right">{{ translate('Options')}}</th>
                                     </tr>
                                 </thead>
 

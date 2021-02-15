@@ -6,25 +6,25 @@
         <div class="row">
             <div class="col-xl-8 mx-auto">
                 <div class="row aiz-steps arrow-divider">
-                    <div class="col">
+                    <div class="col done">
                         <div class="text-center text-success">
                             <i class="la-3x mb-2 las la-shopping-cart"></i>
                             <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('1. My Cart')}}</h3>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col done">
                         <div class="text-center text-success">
                             <i class="la-3x mb-2 las la-map"></i>
                             <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('2. Shipping info')}}</h3>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col done">
                         <div class="text-center text-success">
                             <i class="la-3x mb-2 las la-truck"></i>
                             <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('3. Delivery info')}}</h3>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col active">
                         <div class="text-center text-primary">
                             <i class="la-3x mb-2 las la-credit-card"></i>
                             <h3 class="fs-14 fw-600 d-none d-lg-block text-capitalize">{{ translate('4. Payment')}}</h3>
@@ -169,6 +169,45 @@
                                                         <img src="{{ static_asset('assets/img/cards/ngenius.png')}}" class="img-fluid mb-2">
                                                         <span class="d-block text-center">
                                                             <span class="d-block fw-600 fs-15">{{ translate('ngenius')}}</span>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        @endif
+                                        @if(\App\BusinessSetting::where('type', 'iyzico')->first()->value == 1)
+                                            <div class="col-6 col-md-4">
+                                                <label class="aiz-megabox d-block mb-3">
+                                                    <input value="iyzico" class="online_payment" type="radio" name="payment_option" checked>
+                                                    <span class="d-block p-3 aiz-megabox-elem">
+                                                        <img src="{{ static_asset('assets/img/cards/iyzico.png')}}" class="img-fluid mb-2">
+                                                        <span class="d-block text-center">
+                                                            <span class="d-block fw-600 fs-15">{{ translate('Iyzico')}}</span>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        @endif
+                                        @if(\App\BusinessSetting::where('type', 'nagad')->first()->value == 1)
+                                            <div class="col-6 col-md-4">
+                                                <label class="aiz-megabox d-block mb-3">
+                                                    <input value="nagad" class="online_payment" type="radio" name="payment_option" checked>
+                                                    <span class="d-block p-3 aiz-megabox-elem">
+                                                        <img src="{{ static_asset('assets/img/cards/nagad.png')}}" class="img-fluid mb-2">
+                                                        <span class="d-block text-center">
+                                                            <span class="d-block fw-600 fs-15">{{ translate('Nagad')}}</span>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        @endif
+                                        @if(\App\BusinessSetting::where('type', 'bkash')->first()->value == 1)
+                                            <div class="col-6 col-md-4">
+                                                <label class="aiz-megabox d-block mb-3">
+                                                    <input value="bkash" class="online_payment" type="radio" name="payment_option" checked>
+                                                    <span class="d-block p-3 aiz-megabox-elem">
+                                                        <img src="{{ static_asset('assets/img/cards/bkash.png')}}" class="img-fluid mb-2">
+                                                        <span class="d-block text-center">
+                                                            <span class="d-block fw-600 fs-15">{{ translate('Bkash')}}</span>
                                                         </span>
                                                     </span>
                                                 </label>

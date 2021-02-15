@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2020 at 12:15 PM
+-- Generation Time: Jan 22, 2021 at 11:30 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -239,7 +238,7 @@ INSERT INTO `business_settings` (`id`, `type`, `value`, `created_at`, `updated_a
 (37, 'email_verification', '0', '2019-04-30 07:30:07', '2019-04-30 07:30:07'),
 (38, 'wallet_system', '0', '2019-05-19 08:05:44', '2019-05-19 02:11:57'),
 (39, 'coupon_system', '0', '2019-06-11 09:46:18', '2019-06-11 09:46:18'),
-(40, 'current_version', '3.7', '2019-06-11 09:46:18', '2019-06-11 09:46:18'),
+(40, 'current_version', '3.9', '2019-06-11 09:46:18', '2019-06-11 09:46:18'),
 (41, 'instamojo_payment', '0', '2019-07-06 09:58:03', '2019-07-06 09:58:03'),
 (42, 'instamojo_sandbox', '1', '2019-07-06 09:58:43', '2019-07-06 09:58:43'),
 (43, 'razorpay', '0', '2019-07-06 09:58:43', '2019-07-06 09:58:43'),
@@ -304,8 +303,12 @@ INSERT INTO `business_settings` (`id`, `type`, `value`, `created_at`, `updated_a
 (104, 'system_logo_black', NULL, '2020-11-16 07:26:36', '2020-11-16 07:26:36'),
 (105, 'timezone', NULL, '2020-11-16 07:26:36', '2020-11-16 07:26:36'),
 (106, 'admin_login_background', NULL, '2020-11-16 07:26:36', '2020-11-16 07:26:36'),
-(107, 'payfast', '0', '2020-11-16 07:26:36', '2020-11-16 07:26:36'),
-(108, 'payfast_sandbox', '1', '2020-11-16 07:26:36', '2020-11-16 07:26:36');
+(107, 'iyzico_sandbox', '1', '2020-12-30 16:45:56', '2020-12-30 16:45:56'),
+(108, 'iyzico', '1', '2020-12-30 16:45:56', '2020-12-30 16:45:56'),
+(109, 'decimal_separator', '1', '2020-12-30 16:45:56', '2020-12-30 16:45:56'),
+(110, 'nagad', '0', '2021-01-22 10:30:03', '2021-01-22 10:30:03'),
+(111, 'bkash', '0', '2021-01-22 10:30:03', '2021-01-22 10:30:03'),
+(112, 'bkash_sandbox', '1', '2021-01-22 10:30:03', '2021-01-22 10:30:03');
 
 -- --------------------------------------------------------
 
@@ -320,7 +323,7 @@ CREATE TABLE `carts` (
   `variation` text COLLATE utf8_unicode_ci,
   `price` double(20,2) DEFAULT NULL,
   `tax` double(20,2) DEFAULT NULL,
-  `shipping_cost` double(8,2) DEFAULT NULL,
+  `shipping_cost` double(20,2) DEFAULT NULL,
   `quantity` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -370,6 +373,36 @@ CREATE TABLE `category_translations` (
   `category_id` bigint(20) NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `lang` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cities`
+--
+
+CREATE TABLE `cities` (
+  `id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `cost` double(20,2) NOT NULL DEFAULT '0.00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `city_translations`
+--
+
+CREATE TABLE `city_translations` (
+  `id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `lang` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -832,7 +865,7 @@ CREATE TABLE `coupons` (
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `details` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `discount` double(8,2) NOT NULL,
+  `discount` double(20,2) NOT NULL,
   `discount_type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `start_date` int(15) NOT NULL,
   `end_date` int(15) NOT NULL,
@@ -931,7 +964,7 @@ INSERT INTO `customers` (`id`, `user_id`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `customer_packages` (
   `id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `amount` double(28,2) DEFAULT NULL,
+  `amount` double(20,2) DEFAULT NULL,
   `product_upload` int(11) DEFAULT NULL,
   `logo` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -998,7 +1031,7 @@ CREATE TABLE `customer_products` (
   `unit` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `tags` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` mediumtext COLLATE utf8_unicode_ci,
-  `unit_price` double(28,2) DEFAULT '0.00',
+  `unit_price` double(20,2) DEFAULT '0.00',
   `meta_title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_description` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_img` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1056,7 +1089,7 @@ CREATE TABLE `flash_deal_products` (
   `id` int(11) NOT NULL,
   `flash_deal_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `discount` double(8,2) DEFAULT '0.00',
+  `discount` double(20,2) DEFAULT '0.00',
   `discount_type` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -1340,8 +1373,8 @@ CREATE TABLE `orders` (
   `payment_type` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `payment_status` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'unpaid',
   `payment_details` longtext COLLATE utf8_unicode_ci,
-  `grand_total` double(8,2) DEFAULT NULL,
-  `coupon_discount` double(8,2) NOT NULL DEFAULT '0.00',
+  `grand_total` double(20,2) DEFAULT NULL,
+  `coupon_discount` double(20,2) NOT NULL DEFAULT '0.00',
   `code` mediumtext COLLATE utf8_unicode_ci,
   `date` int(20) NOT NULL,
   `viewed` int(1) NOT NULL DEFAULT '0',
@@ -1364,9 +1397,9 @@ CREATE TABLE `order_details` (
   `seller_id` int(11) DEFAULT NULL,
   `product_id` int(11) NOT NULL,
   `variation` longtext COLLATE utf8_unicode_ci,
-  `price` double(8,2) DEFAULT NULL,
-  `tax` double(8,2) NOT NULL DEFAULT '0.00',
-  `shipping_cost` double(8,2) NOT NULL DEFAULT '0.00',
+  `price` double(20,2) DEFAULT NULL,
+  `tax` double(20,2) NOT NULL DEFAULT '0.00',
+  `shipping_cost` double(20,2) NOT NULL DEFAULT '0.00',
   `quantity` int(11) DEFAULT NULL,
   `payment_status` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'unpaid',
   `delivery_status` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'pending',
@@ -1419,7 +1452,7 @@ CREATE TABLE `page_translations` (
   `id` bigint(20) NOT NULL,
   `page_id` bigint(20) NOT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
   `lang` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -1446,7 +1479,7 @@ CREATE TABLE `password_resets` (
 CREATE TABLE `payments` (
   `id` int(11) NOT NULL,
   `seller_id` int(11) NOT NULL,
-  `amount` double(8,2) NOT NULL DEFAULT '0.00',
+  `amount` double(20,2) NOT NULL DEFAULT '0.00',
   `payment_details` longtext COLLATE utf8_unicode_ci,
   `payment_method` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `txn_code` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1532,10 +1565,10 @@ CREATE TABLE `products` (
   `thumbnail_img` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `video_provider` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `video_link` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `tags` mediumtext COLLATE utf8_unicode_ci,
+  `tags` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` longtext COLLATE utf8_unicode_ci,
-  `unit_price` double(8,2) NOT NULL,
-  `purchase_price` double(8,2) NOT NULL,
+  `unit_price` double(20,2) NOT NULL,
+  `purchase_price` double(20,2) NOT NULL,
   `variant_product` int(1) NOT NULL DEFAULT '0',
   `attributes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '[]',
   `choice_options` mediumtext COLLATE utf8_unicode_ci,
@@ -1544,15 +1577,16 @@ CREATE TABLE `products` (
   `todays_deal` int(11) NOT NULL DEFAULT '0',
   `published` int(11) NOT NULL DEFAULT '1',
   `featured` int(11) NOT NULL DEFAULT '0',
+  `seller_featured` int(11) NOT NULL DEFAULT '0',
   `current_stock` int(10) NOT NULL DEFAULT '0',
   `unit` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `min_qty` int(11) NOT NULL DEFAULT '1',
-  `discount` double(8,2) DEFAULT NULL,
+  `discount` double(20,2) DEFAULT NULL,
   `discount_type` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `tax` double(8,2) DEFAULT NULL,
+  `tax` double(20,2) DEFAULT NULL,
   `tax_type` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `shipping_type` varchar(20) CHARACTER SET latin1 DEFAULT 'flat_rate',
-  `shipping_cost` double(8,2) DEFAULT '0.00',
+  `shipping_cost` double(20,2) DEFAULT '0.00',
   `num_of_sale` int(11) NOT NULL DEFAULT '0',
   `meta_title` mediumtext COLLATE utf8_unicode_ci,
   `meta_description` longtext COLLATE utf8_unicode_ci,
@@ -1579,7 +1613,7 @@ CREATE TABLE `product_stocks` (
   `product_id` int(11) NOT NULL,
   `variant` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `sku` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `price` double(10,2) NOT NULL DEFAULT '0.00',
+  `price` double(20,2) NOT NULL DEFAULT '0.00',
   `qty` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -1691,7 +1725,7 @@ CREATE TABLE `sellers` (
   `verification_status` int(1) NOT NULL DEFAULT '0',
   `verification_info` longtext COLLATE utf8_unicode_ci,
   `cash_on_delivery_status` int(1) NOT NULL DEFAULT '0',
-  `admin_to_pay` double(8,2) NOT NULL DEFAULT '0.00',
+  `admin_to_pay` double(20,2) NOT NULL DEFAULT '0.00',
   `bank_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `bank_acc_name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `bank_acc_no` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1717,7 +1751,7 @@ INSERT INTO `sellers` (`id`, `user_id`, `verification_status`, `verification_inf
 CREATE TABLE `seller_withdraw_requests` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `amount` double(8,2) DEFAULT NULL,
+  `amount` double(20,2) DEFAULT NULL,
   `message` longtext,
   `status` int(1) DEFAULT NULL,
   `viewed` int(1) DEFAULT NULL,
@@ -1770,7 +1804,7 @@ CREATE TABLE `shops` (
   `meta_title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_description` text COLLATE utf8_unicode_ci,
   `pick_up_point_id` text COLLATE utf8_unicode_ci,
-  `shipping_cost` double(8,2) NOT NULL DEFAULT '0.00',
+  `shipping_cost` double(20,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -2971,14 +3005,12 @@ INSERT INTO `translations` (`id`, `lang`, `lang_key`, `lang_value`, `created_at`
 (1357, 'en', 'Product has been updated successfully', 'Product has been updated successfully', '2020-11-15 11:51:36', '2020-11-15 11:51:36'),
 (1358, 'en', 'Add Your Digital Product', 'Add Your Digital Product', '2020-11-15 12:24:21', '2020-11-15 12:24:21'),
 (1359, 'en', 'Active eCommerce CMS Update Process', 'Active eCommerce CMS Update Process', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
-(1360, 'en', 'You will need to know the following items before\r\n        proceeding', 'You will need to know the following items before\r\n        proceeding', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
 (1361, 'en', 'Codecanyon purchase code', 'Codecanyon purchase code', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
 (1362, 'en', 'Database Name', 'Database Name', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
 (1363, 'en', 'Database Username', 'Database Username', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
 (1364, 'en', 'Database Password', 'Database Password', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
 (1365, 'en', 'Database Hostname', 'Database Hostname', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
 (1366, 'en', 'Update Now', 'Update Now', '2020-11-16 07:53:31', '2020-11-16 07:53:31'),
-(1367, 'en', 'You will need to know the following items before\r\n                            proceeding', 'You will need to know the following items before\r\n                            proceeding', '2020-11-16 07:54:20', '2020-11-16 07:54:20'),
 (1368, 'en', 'Congratulations', 'Congratulations', '2020-11-16 07:55:14', '2020-11-16 07:55:14'),
 (1369, 'en', 'You have successfully completed the updating process. Please Login to continue', 'You have successfully completed the updating process. Please Login to continue', '2020-11-16 07:55:14', '2020-11-16 07:55:14'),
 (1370, 'en', 'Go to Home', 'Go to Home', '2020-11-16 07:55:14', '2020-11-16 07:55:14'),
@@ -3039,7 +3071,7 @@ CREATE TABLE `users` (
   `city` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `postal_code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `balance` double(8,2) NOT NULL DEFAULT '0.00',
+  `balance` double(20,2) NOT NULL DEFAULT '0.00',
   `banned` tinyint(4) NOT NULL DEFAULT '0',
   `referral_code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `customer_package_id` int(11) DEFAULT NULL,
@@ -3065,7 +3097,7 @@ INSERT INTO `users` (`id`, `referred_by`, `provider_id`, `user_type`, `name`, `e
 CREATE TABLE `wallets` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `amount` double(8,2) NOT NULL,
+  `amount` double(20,2) NOT NULL,
   `payment_method` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `payment_details` longtext COLLATE utf8_unicode_ci,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -3154,12 +3186,25 @@ ALTER TABLE `carts`
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `slug` (`slug`);
 
 --
 -- Indexes for table `category_translations`
 --
 ALTER TABLE `category_translations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cities`
+--
+ALTER TABLE `cities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `city_translations`
+--
+ALTER TABLE `city_translations`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3380,7 +3425,9 @@ ALTER TABLE `policies`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `name` (`name`),
+  ADD KEY `tags` (`tags`(255));
 
 --
 -- Indexes for table `product_stocks`
@@ -3422,7 +3469,8 @@ ALTER TABLE `searches`
 -- Indexes for table `sellers`
 --
 ALTER TABLE `sellers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `seller_withdraw_requests`
@@ -3560,7 +3608,7 @@ ALTER TABLE `brand_translations`
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `carts`
@@ -3579,6 +3627,18 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `category_translations`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cities`
+--
+ALTER TABLE `cities`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `city_translations`
+--
+ALTER TABLE `city_translations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `colors`

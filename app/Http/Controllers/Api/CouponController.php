@@ -16,7 +16,7 @@ class CouponController extends Controller
         if ($coupon != null && strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date && CouponUsage::where('user_id', $request->user_id)->where('coupon_id', $coupon->id)->first() == null) {
             $couponDetails = json_decode($coupon->details);
             if ($coupon->type == 'cart_base') {
-                $sum = Cart::where('uesr_id', $request->user_id)->sum('price');
+                $sum = Cart::where('user_id', $request->user_id)->sum('price');
                 if ($sum > $couponDetails->min_buy) {
                     if ($coupon->discount_type == 'percent') {
                         $couponDiscount =  ($sum * $coupon->discount) / 100;

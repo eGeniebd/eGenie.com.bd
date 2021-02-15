@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $added_by
  * @property int $user_id
  * @property int $category_id
- * @property int $subcategory_id
- * @property int $subsubcategory_id
  * @property int $brand_id
  * @property string|null $photos
  * @property string|null $thumbnail_img
@@ -120,11 +118,6 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function subCategory()
-    {
-        return $this->belongsTo(SubCategory::class, 'subcategory_id');
     }
 
     public function brand()

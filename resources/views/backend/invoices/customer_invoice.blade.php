@@ -27,6 +27,20 @@
 	            font-family: 'Hind Siliguri';
 	            color: #333542;
 	        }
+	    @elseif($currency_code == 'ILS')
+			@font-face {
+	            font-family: 'Cairo';
+	            src: url("{{ static_asset('assets/fonts/Cairo-Regular.ttf') }}") format("truetype");
+	            font-weight: normal;
+	            font-style: normal;
+	        }
+	        *{
+	            margin: 0;
+	            padding: 0;
+	            line-height: 1.3;
+	            font-family: 'Cairo';
+	            color: #333542;
+	        }
         @else
         	@font-face {
 	            font-family: 'Roboto';
@@ -37,13 +51,13 @@
 	        *{
 	            margin: 0;
 	            padding: 0;
-	            line-height: 1.3;
+	            line-height: 1.1;
 	            font-family: 'Roboto';
 	            color: #333542;
 	        }
         @endif
 		body{
-			font-size: .875rem;
+			font-size: 0.688rem;
 		}
 		.gry-color *,
 		.gry-color{
@@ -56,13 +70,13 @@
 			font-weight: normal;
 		}
 		table.padding th{
-			padding: .5rem .7rem;
+			padding: .25rem .7rem;
 		}
 		table.padding td{
-			padding: .7rem;
+			padding: .25rem .7rem;
 		}
 		table.sm-padding td{
-			padding: .2rem .7rem;
+			padding: .1rem .7rem;
 		}
 		.border-bottom td,
 		.border-bottom th{
@@ -74,12 +88,6 @@
 		.text-right{
 			text-align:right;
 		}
-		.small{
-			font-size: .85rem;
-		}
-		.currency{
-
-		}
 	</style>
 </head>
 <body>
@@ -89,22 +97,22 @@
 			$logo = get_setting('header_logo');
 		@endphp
 
-		<div style="background: #eceff4;padding: 1.5rem;">
+		<div style="background: #eceff4;padding: 1rem;">
 			<table>
 				<tr>
 					<td>
 						@if($logo != null)
-							<img loading="lazy"  src="{{ uploaded_asset($logo) }}" height="40" style="display:inline-block;">
+							<img src="{{ uploaded_asset($logo) }}" height="30" style="display:inline-block;">
 						@else
-							<img loading="lazy"  src="{{ static_asset('assets/img/logo.png') }}" height="40" style="display:inline-block;">
+							<img src="{{ static_asset('assets/img/logo.png') }}" height="30" style="display:inline-block;">
 						@endif
 					</td>
-					<td style="font-size: 2.5rem;" class="text-right strong">{{  translate('INVOICE') }}</td>
+					<td style="font-size: 1.5rem;" class="text-right strong">{{  translate('INVOICE') }}</td>
 				</tr>
 			</table>
 			<table>
 				<tr>
-					<td style="font-size: 1.2rem;" class="strong">{{ get_setting('site_name') }}</td>
+					<td style="font-size: 1rem;" class="strong">{{ get_setting('site_name') }}</td>
 					<td class="text-right"></td>
 				</tr>
 				<tr>
@@ -123,7 +131,7 @@
 
 		</div>
 
-		<div style="padding: 1.5rem;padding-bottom: 0">
+		<div style="padding: 1rem;padding-bottom: 0">
             <table>
 				@php
 					$shipping_address = json_decode($order->shipping_address);
@@ -136,15 +144,15 @@
 			</table>
 		</div>
 
-	    <div style="padding: 1.5rem;">
+	    <div style="padding: 1rem;">
 			<table class="padding text-left small border-bottom">
 				<thead>
 	                <tr class="gry-color" style="background: #eceff4;">
-	                    <th width="35%">{{ translate('Product Name') }}</th>
-						<th width="15%">{{ translate('Delivery Type') }}</th>
-	                    <th width="10%">{{ translate('Qty') }}</th>
-	                    <th width="15%">{{ translate('Unit Price') }}</th>
-	                    <th width="10%">{{ translate('Tax') }}</th>
+	                    <th width="35%" class="text-left">{{ translate('Product Name') }}</th>
+						<th width="15%" class="text-left">{{ translate('Delivery Type') }}</th>
+	                    <th width="10%" class="text-left">{{ translate('Qty') }}</th>
+	                    <th width="15%" class="text-left">{{ translate('Unit Price') }}</th>
+	                    <th width="10%" class="text-left">{{ translate('Tax') }}</th>
 	                    <th width="15%" class="text-right">{{ translate('Total') }}</th>
 	                </tr>
 				</thead>
@@ -187,6 +195,10 @@
 			        <tr class="border-bottom">
 			            <th class="gry-color text-left">{{ translate('Total Tax') }}</th>
 			            <td class="currency">{{ single_price($order->orderDetails->sum('tax')) }}</td>
+			        </tr>
+                    <tr class="border-bottom">
+			            <th class="gry-color text-left">{{ translate('Coupon Discount') }}</th>
+			            <td class="currency">{{ single_price($order->coupon_discount) }}</td>
 			        </tr>
 			        <tr>
 			            <th class="text-left strong">{{ translate('Grand Total') }}</th>

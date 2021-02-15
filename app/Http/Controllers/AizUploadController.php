@@ -6,15 +6,55 @@ use Illuminate\Http\Request;
 use App\Upload;
 use Response;
 use Auth;
+use Storage;
 
 class AizUploadController extends Controller
 {
-    //
+
+
+    public function index(Request $request){
+
+        $all_uploads = Upload::query();
+        $search = null;
+        $sort_by = null;
+
+        if ($request->search != null) {
+            $search = $request->search;
+            $all_uploads->where('file_original_name', 'like', '%'.$request->search.'%');
+        }
+
+        $sort_by = $request->sort;
+        switch ($request->sort) {
+            case 'newest':
+                $all_uploads->orderBy('created_at', 'desc');
+                break;
+            case 'oldest':
+                $all_uploads->orderBy('created_at', 'asc');
+                break;
+            case 'smallest':
+                $all_uploads->orderBy('file_size', 'asc');
+                break;
+            case 'largest':
+                $all_uploads->orderBy('file_size', 'desc');
+                break;
+            default:
+                $all_uploads->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $all_uploads = $all_uploads->paginate(60)->appends(request()->query());
+
+        return view('backend.uploaded_files.index', compact('all_uploads', 'search', 'sort_by') );
+    }
+
+    public function create(){
+        return view('backend.uploaded_files.create');
+    }
+
 
     public function show_uploader(Request $request){
         return view('uploader.aiz-uploader');
     }
-
     public function upload(Request $request){
         $type = array(
             "jpg"=>"image",
@@ -55,31 +95,25 @@ class AizUploadController extends Controller
 
         if($request->hasFile('aiz_file')){
             $upload = new Upload;
-            $upload->file_original_name = null;
-
-            $arr = explode('.', $request->file('aiz_file')->getClientOriginalName());
-
-            for($i=0; $i < count($arr)-1; $i++){
-                if($i == 0){
-                    $upload->file_original_name .= $arr[$i];
-                }
-                else{
-                    $upload->file_original_name .= ".".$arr[$i];
-                }
-            }
-
-            $upload->file_name = $request->file('aiz_file')->store('uploads/all');
-            $upload->user_id = Auth::user()->id;
             $upload->extension = strtolower($request->file('aiz_file')->getClientOriginalExtension());
-            if(isset($type[$upload->extension])){
-                $upload->type = $type[$upload->extension];
-            }
-            else{
-                $upload->type = "others";
-            }
-            $upload->file_size = $request->file('aiz_file')->getSize();
-            $upload->save();
 
+            if(isset($type[$upload->extension])){
+                $upload->file_original_name = null;
+                $arr = explode('.', $request->file('aiz_file')->getClientOriginalName());
+                for($i=0; $i < count($arr)-1; $i++){
+                    if($i == 0){
+                        $upload->file_original_name .= $arr[$i];
+                    }
+                    else{
+                        $upload->file_original_name .= ".".$arr[$i];
+                    }
+                }
+                $upload->file_name = $request->file('aiz_file')->store('uploads/all');
+                $upload->user_id = Auth::user()->id;
+                $upload->type = $type[$upload->extension];
+                $upload->file_size = $request->file('aiz_file')->getSize();
+                $upload->save();
+            }
             return '{}';
         }
     }
@@ -114,11 +148,21 @@ class AizUploadController extends Controller
 
     public function destroy(Request $request,$id)
     {
-        if(file_exists(public_path().'/'.Upload::where('id', $id)->first()->file_name)){
-            unlink(public_path().'/'.Upload::where('id', $id)->first()->file_name);
+        try{
+            if(env('FILESYSTEM_DRIVER') == 's3'){
+                Storage::disk('s3')->delete(Upload::where('id', $id)->first()->file_name);
+            }
+            else{
+                unlink(public_path().'/'.Upload::where('id', $id)->first()->file_name);
+            }
+            Upload::destroy($id);
+            flash(translate('File deleted successfully'))->success();
         }
-        Upload::destroy($id);
-        return ['status'=> true] ;
+        catch(\Exception $e){
+            Upload::destroy($id);
+            flash(translate('File deleted successfully'))->success();
+        }
+        return back();
     }
 
     public function get_preview_files(Request $request){
@@ -135,9 +179,16 @@ class AizUploadController extends Controller
            $file_path = public_path($project_attachment->file_name);
             return Response::download($file_path);
         }catch(\Exception $e){
-            flash('File does not exist!')->error();
+            flash(translate('File does not exist!'))->error();
             return back();
         }
 
     }
+    //Download project attachment
+    public function file_info(Request $request)
+    {
+        $file = Upload::findOrFail($request['id']);
+        return view('backend.uploaded_files.info',compact('file'));
+    }
+
 }

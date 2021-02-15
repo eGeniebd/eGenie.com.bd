@@ -63,9 +63,6 @@ class CheckoutController extends Controller
                 } elseif ($request->payment_option == 'voguepay') {
                     $voguePay = new VoguePayController;
                     return $voguePay->customer_showForm();
-                } elseif ($request->payment_option == 'twocheckout') {
-                    $twocheckout = new TwoCheckoutController;
-                    return $twocheckout->index($request);
                 } elseif ($request->payment_option == 'payhere') {
                     $order = Order::findOrFail($request->session()->get('order_id'));
 
@@ -89,7 +86,17 @@ class CheckoutController extends Controller
                 } else if ($request->payment_option == 'ngenius') {
                     $ngenius = new NgeniusController();
                     return $ngenius->pay();
-                } else if ($request->payment_option == 'flutterwave') {
+                } else if ($request->payment_option == 'iyzico') {
+                    $iyzico = new IyzicoController();
+                    return $iyzico->pay();
+                } else if ($request->payment_option == 'nagad') {
+                    $nagad = new NagadController;
+                    return $nagad->getSession();
+                } else if ($request->payment_option == 'bkash') {
+                    $bkash = new BkashController;
+                    return $bkash->pay();
+                }
+                 else if ($request->payment_option == 'flutterwave') {
                     $flutterwave = new FlutterwaveController();
                     return $flutterwave->pay();
                 } else if ($request->payment_option == 'mpesa') {
@@ -192,7 +199,9 @@ class CheckoutController extends Controller
         $order->commission_calculated = 1;
         $order->save();
 
-        Session::put('cart', Session::get('cart')->where('owner_id', '!=', Session::get('owner_id')));
+        if (Session::has('cart')) {
+            Session::put('cart', Session::get('cart')->where('owner_id', '!=', Session::get('owner_id')));
+        }
         Session::forget('owner_id');
         Session::forget('payment_type');
         Session::forget('delivery_info');
@@ -285,7 +294,12 @@ class CheckoutController extends Controller
 
             $cart = $cart->map(function ($object, $key) use ($request) {
                 if (\App\Product::find($object['id'])->user_id == $request->owner_id) {
-                    $object['shipping'] = getShippingCost($key);
+                    if ($object['shipping_type'] == 'home_delivery') {
+                        $object['shipping'] = getShippingCost($key);
+                    }
+                    else {
+                        $object['shipping'] = 0;
+                    }
                 } else {
                     $object['shipping'] = 0;
                 }

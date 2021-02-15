@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Paypal;
 use Redirect;
 use App\Order;
 use App\BusinessSetting;
@@ -11,87 +10,72 @@ use App\Seller;
 use Session;
 use App\CustomerPackage;
 use App\SellerPackage;
-use App\Http\Controllers\CustomerPackageController;
-use App\Http\Controllers\CommissionController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\WalletController;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Core\ProductionEnvironment;
+use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 
 class PaypalController extends Controller
 {
-    private $_apiContext;
-
-    public function __construct()
-    {
-        if(Session::has('payment_type')){
-            if(BusinessSetting::where('type', 'paypal_sandbox')->first()->value == 1){
-                $mode = 'sandbox';
-                $endPoint = 'https://api.sandbox.paypal.com';
-            }
-            else{
-                $mode = 'live';
-                $endPoint = 'https://api.paypal.com';
-            }
-            $this->_apiContext = PayPal::ApiContext(
-                env('PAYPAL_CLIENT_ID'),
-                env('PAYPAL_CLIENT_SECRET'));
-
-            $this->_apiContext->setConfig(array(
-                'mode' => $mode,
-                'service.EndPoint' => $endPoint,
-                'http.ConnectionTimeOut' => 30,
-                'log.LogEnabled' => true,
-                'log.FileName' => public_path('logs/paypal.log'),
-                'log.LogLevel' => 'FINE'
-            ));
-        }
-    }
 
     public function getCheckout()
     {
-    	$payer = PayPal::Payer();
-    	$payer->setPaymentMethod('paypal');
-    	$amount = PayPal::Amount();
-    	$amount->setCurrency(\App\Currency::findOrFail(\App\BusinessSetting::where('type', 'system_default_currency')->first()->value)->code);
+        // Creating an environment
+        $clientId = env('PAYPAL_CLIENT_ID');
+        $clientSecret = env('PAYPAL_CLIENT_SECRET');
+
+        if (get_setting('paypal_sandbox') == 1) {
+            $environment = new SandboxEnvironment($clientId, $clientSecret);
+        }
+        else {
+            $environment = new ProductionEnvironment($clientId, $clientSecret);
+        }
+        $client = new PayPalHttpClient($environment);
 
         if(Session::has('payment_type')){
             if(Session::get('payment_type') == 'cart_payment'){
                 $order = Order::findOrFail(Session::get('order_id'));
-                $amount->setTotal(convert_to_usd($order->grand_total));
-                $description = 'Payment for order completion';
+                $amount = $order->grand_total;
             }
             elseif (Session::get('payment_type') == 'wallet_payment') {
-                $amount->setTotal(convert_to_usd(Session::get('payment_data')['amount']));
-                $description = 'Wallet Payment';
+                $amount = Session::get('payment_data')['amount'];
             }
             elseif (Session::get('payment_type') == 'customer_package_payment') {
                 $customer_package = CustomerPackage::findOrFail(Session::get('payment_data')['customer_package_id']);
-                $amount->setTotal(convert_to_usd($customer_package->amount));
-                $description = 'Customer Package Payment';
+                $amount = $customer_package->amount;
             }
             elseif (Session::get('payment_type') == 'seller_package_payment') {
                 $seller_package = SellerPackage::findOrFail(Session::get('payment_data')['seller_package_id']);
-                $amount->setTotal(convert_to_usd($seller_package->amount));
-                $description = 'Seller Package Payment';
+                $amount = $seller_package->amount;
             }
         }
-    	// This is the simple way,
-    	// you can alternatively describe everything in the order separately;
-    	// Reference the PayPal PHP REST SDK for details.
-    	$transaction = PayPal::Transaction();
-    	$transaction->setAmount($amount);
-    	$transaction->setDescription($description);
-    	$redirectUrls = PayPal:: RedirectUrls();
-    	$redirectUrls->setReturnUrl(url('paypal/payment/done'));
-    	$redirectUrls->setCancelUrl(url('paypal/payment/cancel'));
-        $payment = PayPal::Payment();
-        $payment->setIntent('sale');
-        $payment->setPayer($payer);
-        $payment->setRedirectUrls($redirectUrls);
-        $payment->setTransactions(array($transaction));
-        $response = $payment->create($this->_apiContext);
-        $redirectUrl = $response->links[1]->href;
 
-    	return Redirect::to( $redirectUrl );
+        $request = new OrdersCreateRequest();
+        $request->prefer('return=representation');
+        $request->body = [
+                             "intent" => "CAPTURE",
+                             "purchase_units" => [[
+                                 "reference_id" => rand(000000,999999),
+                                 "amount" => [
+                                     "value" => number_format($amount, 2),
+                                     "currency_code" => \App\Currency::findOrFail(get_setting('system_default_currency'))->code
+                                 ]
+                             ]],
+                             "application_context" => [
+                                  "cancel_url" => url('paypal/payment/cancel'),
+                                  "return_url" => url('paypal/payment/done')
+                             ]
+                         ];
+
+        try {
+            // Call API with your client and get a response for your call
+            $response = $client->execute($request);
+            // If call returns body in response, you can get the deserialized version from the result attribute of the response
+            return Redirect::to($response->result->links[1]->href);
+        }catch (HttpException $ex) {
+
+        }
     }
 
 
@@ -106,76 +90,46 @@ class PaypalController extends Controller
 
     public function getDone(Request $request)
     {
-    	$payment_id = $request->get('paymentId');
-    	$token = $request->get('token');
-    	$payer_id = $request->get('PayerID');
+        //dd($request->all());
+        // Creating an environment
+        $clientId = env('PAYPAL_CLIENT_ID');
+        $clientSecret = env('PAYPAL_CLIENT_SECRET');
 
-        if(BusinessSetting::where('type', 'paypal_sandbox')->first()->value == 1){
-            $mode = 'sandbox';
-            $endPoint = 'https://api.sandbox.paypal.com';
+        if (get_setting('paypal_sandbox') == 1) {
+            $environment = new SandboxEnvironment($clientId, $clientSecret);
         }
-        else{
-            $mode = 'live';
-            $endPoint = 'https://api.paypal.com';
+        else {
+            $environment = new ProductionEnvironment($clientId, $clientSecret);
         }
-        $this->_apiContext = PayPal::ApiContext(
-            env('PAYPAL_CLIENT_ID'),
-            env('PAYPAL_CLIENT_SECRET'));
+        $client = new PayPalHttpClient($environment);
 
-        $this->_apiContext->setConfig(array(
-            'mode' => $mode,
-            'service.EndPoint' => $endPoint,
-            'http.ConnectionTimeOut' => 30,
-            'log.LogEnabled' => true,
-            'log.FileName' => public_path('logs/paypal.log'),
-            'log.LogLevel' => 'FINE'
-        ));
+        // $response->result->id gives the orderId of the order created above
 
-        if($request->session()->has('payment_type')){
-            if($request->session()->get('payment_type') == 'cart_payment'){
-                $payment = PayPal::getById($payment_id, $this->_apiContext);
-                $paymentExecution = PayPal::PaymentExecution();
-            	$paymentExecution->setPayerId($payer_id);
-            	$executePayment = $payment->execute($paymentExecution, $this->_apiContext);
+        $ordersCaptureRequest = new OrdersCaptureRequest($request->token);
+        $ordersCaptureRequest->prefer('return=representation');
+        try {
+            // Call API with your client and get a response for your call
+            $response = $client->execute($ordersCaptureRequest);
 
-                $payment = json_encode($executePayment);
-
-                $checkoutController = new CheckoutController;
-                return $checkoutController->checkout_done($request->session()->get('order_id'), $payment);
+            // If call returns body in response, you can get the deserialized version from the result attribute of the response
+            if($request->session()->has('payment_type')){
+                if($request->session()->get('payment_type') == 'cart_payment'){
+                    $checkoutController = new CheckoutController;
+                    return $checkoutController->checkout_done($request->session()->get('order_id'), json_encode($response));
+                }
+                elseif ($request->session()->get('payment_type') == 'wallet_payment') {
+                    $walletController = new WalletController;
+                    return $walletController->wallet_payment_done($request->session()->get('payment_data'), json_encode($response));
+                }
+                elseif ($request->session()->get('payment_type') == 'customer_package_payment') {$customer_package_controller = new CustomerPackageController;
+                    return $customer_package_controller->purchase_payment_done($request->session()->get('payment_data'), json_encode($response));
+                }
+                elseif ($request->session()->get('payment_type') == 'seller_package_payment') {$seller_package_controller = new SellerPackageController;
+                    return $seller_package_controller->purchase_payment_done($request->session()->get('payment_data'), json_encode($response));
+                }
             }
-            elseif ($request->session()->get('payment_type') == 'wallet_payment') {
-                $payment = PayPal::getById($payment_id, $this->_apiContext);
-                $paymentExecution = PayPal::PaymentExecution();
-            	$paymentExecution->setPayerId($payer_id);
-            	$executePayment = $payment->execute($paymentExecution, $this->_apiContext);
+        }catch (HttpException $ex) {
 
-                $payment = json_encode($executePayment);
-
-                $walletController = new WalletController;
-                return $walletController->wallet_payment_done($request->session()->get('payment_data'), $payment);
-            }
-            elseif ($request->session()->get('payment_type') == 'customer_package_payment') {
-                $payment = PayPal::getById($payment_id, $this->_apiContext);
-                $paymentExecution = PayPal::PaymentExecution();
-            	$paymentExecution->setPayerId($payer_id);
-            	$executePayment = $payment->execute($paymentExecution, $this->_apiContext);
-
-                $payment = json_encode($executePayment);
-
-                $customer_package_controller = new CustomerPackageController;
-                return $customer_package_controller->purchase_payment_done($request->session()->get('payment_data'), $payment);
-            }
-            elseif ($request->session()->get('payment_type') == 'seller_package_payment') {
-                $payment = PayPal::getById($payment_id, $this->_apiContext);
-                $paymentExecution = PayPal::PaymentExecution();
-            	$paymentExecution->setPayerId($payer_id);
-            	$executePayment = $payment->execute($paymentExecution, $this->_apiContext);
-
-                $payment = json_encode($executePayment);
-
-                $seller_package_controller = new SellerPackageController;
-                return $seller_package_controller->purchase_payment_done($request->session()->get('payment_data'), $payment);
-            }
         }
     }
 }

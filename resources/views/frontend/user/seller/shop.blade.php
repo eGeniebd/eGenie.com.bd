@@ -60,7 +60,7 @@
                                             <label>{{ translate('Shipping Cost')}} <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-md-10">
-                                            <input type="number" min="0" class="form-control mb-3" placeholder="{{ translate('Shipping Cost')}}" name="shipping_cost" value="{{ $shop->shipping_cost }}" required>
+                                            <input type="number" lang="en" min="0" class="form-control mb-3" placeholder="{{ translate('Shipping Cost')}}" name="shipping_cost" value="{{ $shop->shipping_cost }}" required>
                                         </div>
                                     </div>
                                 @endif 

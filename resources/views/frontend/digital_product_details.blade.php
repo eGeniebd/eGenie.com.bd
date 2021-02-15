@@ -181,7 +181,9 @@
                                             <strong class="h2 fw-600 text-primary">
                                                 {{ home_discounted_price($detailedProduct->id) }}
                                             </strong>
-                                            <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                            @if($detailedProduct->unit != null)
+                                                <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -476,6 +478,7 @@
                                 <div class="p-4">
                                     <ul class="list-group list-group-flush">
                                         @foreach ($detailedProduct->reviews as $key => $review)
+                                            @if($review->user != null)
                                             <li class="media list-group-item d-flex">
 
                                                 <span class="avatar avatar-md mr-3">
@@ -508,6 +511,7 @@
                                                     </p>
                                                 </div>
                                             </li>
+                                            @endif
                                         @endforeach
                                     </ul>
 
@@ -604,7 +608,7 @@
                         </div>
                         <div class="p-3">
                             <div class="aiz-carousel gutters-5 half-outside-arrow" data-items="5" data-xl-items="3" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                                @foreach (filter_products(\App\Product::where('subcategory_id', $detailedProduct->subcategory_id)->where('id', '!=', $detailedProduct->id))->limit(10)->get() as $key => $related_product)
+                                @foreach (filter_products(\App\Product::where('category_id', $detailedProduct->category_id)->where('id', '!=', $detailedProduct->id))->limit(10)->get() as $key => $related_product)
                                 <div class="carousel-box">
                                     <div class="aiz-card-box border border-light rounded hov-shadow-md my-2 has-transition">
                                         <div class="">

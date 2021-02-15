@@ -55,8 +55,32 @@ class CategoryUtility
 
         $category = Category::where('id', $id)->first();
 
+        CategoryUtility::move_level_up($id);
+
         Category::whereIn('id', $children_ids)->update(['parent_id' => $category->parent_id]);
 
+    }
+
+    public static function move_level_up($id){
+        if (CategoryUtility::get_immediate_children_ids($id, true) > 0) {
+            foreach (CategoryUtility::get_immediate_children_ids($id, true) as $value) {
+                $category = Category::find($value);
+                $category->level -= 1;
+                $category->save();
+                return CategoryUtility::move_level_up($value);
+            }
+        }
+    }
+
+    public static function move_level_down($id){
+        if (CategoryUtility::get_immediate_children_ids($id, true) > 0) {
+            foreach (CategoryUtility::get_immediate_children_ids($id, true) as $value) {
+                $category = Category::find($value);
+                $category->level += 1;
+                $category->save();
+                return CategoryUtility::move_level_down($value);
+            }
+        }
     }
 
     public static function delete_category($id)

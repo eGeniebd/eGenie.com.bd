@@ -23,9 +23,12 @@
 					<label class="col-md-3 col-from-label">{{translate('Category')}} <span class="text-danger">*</span></label>
 					<div class="col-md-8">
 						<select class="form-control aiz-selectpicker" name="category_id" id="category_id" data-live-search="true" required>
-							@foreach($categories as $category)
-								<option value="{{$category->id}}">{{ $category->getTranslation('name') }}</option>
-							@endforeach
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
+                                @foreach ($category->childrenCategories as $childCategory)
+                                    @include('categories.child_category', ['child_category' => $childCategory])
+                                @endforeach
+                            @endforeach
 						</select>
 					</div>
 				</div>
@@ -49,7 +52,7 @@
                 <div class="form-group row">
 					<label class="col-md-3 col-from-label">{{translate('Minimum Qty')}} <span class="text-danger">*</span></label>
 					<div class="col-md-8">
-						<input type="number" class="form-control" name="min_qty" value="1" min="1" required>
+						<input type="number" lang="en" class="form-control" name="min_qty" value="1" min="1" required>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -203,19 +206,19 @@
 				<div class="form-group row">
 					<label class="col-md-3 col-from-label">{{translate('Unit price')}} <span class="text-danger">*</span></label>
 					<div class="col-md-6">
-						<input type="number" min="0" value="0" step="0.01" placeholder="{{ translate('Unit price') }}" name="unit_price" class="form-control" required>
+						<input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Unit price') }}" name="unit_price" class="form-control" required>
 					</div>
 				</div>
 				<div class="form-group row">
 					<label class="col-md-3 col-from-label">{{translate('Purchase price')}} <span class="text-danger">*</span></label>
 					<div class="col-md-6">
-						<input type="number" min="0" value="0" step="0.01" placeholder="{{ translate('Purchase price') }}" name="purchase_price" class="form-control" required>
+						<input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Purchase price') }}" name="purchase_price" class="form-control" required>
 					</div>
 				</div>
 				<div class="form-group row">
 					<label class="col-md-3 col-from-label">{{translate('Tax')}} <span class="text-danger">*</span></label>
 					<div class="col-md-6">
-						<input type="number" min="0" value="0" step="0.01" placeholder="{{ translate('Tax') }}" name="tax" class="form-control" required>
+						<input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Tax') }}" name="tax" class="form-control" required>
 					</div>
 					<div class="col-md-3">
 						<select class="form-control aiz-selectpicker" name="tax_type">
@@ -227,7 +230,7 @@
 				<div class="form-group row">
 					<label class="col-md-3 col-from-label">{{translate('Discount')}} <span class="text-danger">*</span></label>
 					<div class="col-md-6">
-						<input type="number" min="0" value="0" step="0.01" placeholder="{{ translate('Discount') }}" name="discount" class="form-control" required>
+						<input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Discount') }}" name="discount" class="form-control" required>
 					</div>
 					<div class="col-md-3">
 						<select class="form-control aiz-selectpicker" name="discount_type">
@@ -239,7 +242,7 @@
 				<div class="form-group row" id="quantity">
 					<label class="col-md-3 col-from-label">{{translate('Quantity')}} <span class="text-danger">*</span></label>
 					<div class="col-md-6">
-						<input type="number" min="0" value="0" step="1" placeholder="{{ translate('Quantity') }}" name="current_stock" class="form-control" required>
+						<input type="number" lang="en" min="0" value="0" step="1" placeholder="{{ translate('Quantity') }}" name="current_stock" class="form-control" required>
 					</div>
 				</div>
 				<br>
@@ -300,7 +303,7 @@
 							<div class="form-group row">
 								<label class="col-md-3 col-from-label">{{translate('Shipping cost')}}</label>
 								<div class="col-md-8">
-									<input type="number" min="0" value="0" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
+									<input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
 								</div>
 							</div>
 						</div>

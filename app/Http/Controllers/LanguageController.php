@@ -112,8 +112,17 @@ class LanguageController extends Controller
 
     public function destroy($id)
     {
-        Language::destroy($id);
-        flash(translate('Language has been deleted successfully'))->success();
+        $language = Language::findOrFail($id);
+        if (env('DEFAULT_LANGUAGE') == $language->code) {
+            flash(translate('Default language can not be deleted'))->error();
+        }
+        else {
+            if($language->code == Session::get('locale')){
+                Session::put('locale', env('DEFAULT_LANGUAGE'));
+            }
+            Language::destroy($id);
+            flash(translate('Language has been deleted successfully'))->success();
+        }
         return redirect()->route('languages.index');
     }
 }

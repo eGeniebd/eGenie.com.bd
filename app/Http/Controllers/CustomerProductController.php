@@ -40,12 +40,15 @@ class CustomerProductController extends Controller
      */
     public function create()
     {
+        $categories = Category::where('parent_id', 0)
+            ->where('digital', 0)
+            ->with('childrenCategories')
+            ->get();
+
         if(Auth::user()->user_type == "customer" && Auth::user()->remaining_uploads > 0){
-            $categories = Category::all();
             return view('frontend.user.customer.product_upload', compact('categories'));
         }
         elseif (Auth::user()->user_type == "seller" && Auth::user()->remaining_uploads > 0) {
-            $categories = Category::all();
             return view('frontend.user.customer.product_upload', compact('categories'));
         }
         else{
@@ -67,8 +70,6 @@ class CustomerProductController extends Controller
         $customer_product->added_by             = $request->added_by;
         $customer_product->user_id              = Auth::user()->id;
         $customer_product->category_id          = $request->category_id;
-        $customer_product->subcategory_id       = $request->subcategory_id;
-        $customer_product->subsubcategory_id    = $request->subsubcategory_id;
         $customer_product->brand_id             = $request->brand_id;
         $customer_product->conditon             = $request->conditon;
         $customer_product->location             = $request->location;
@@ -132,7 +133,10 @@ class CustomerProductController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $categories = Category::all();
+        $categories = Category::where('parent_id', 0)
+            ->where('digital', 0)
+            ->with('childrenCategories')
+            ->get();
         $product    = CustomerProduct::find($id);
         $lang       = $request->lang;
         return view('frontend.user.customer.product_edit', compact('categories', 'product','lang'));
@@ -156,8 +160,6 @@ class CustomerProductController extends Controller
         $customer_product->status               = '1';
         $customer_product->user_id              = Auth::user()->id;
         $customer_product->category_id          = $request->category_id;
-        $customer_product->subcategory_id       = $request->subcategory_id;
-        $customer_product->subsubcategory_id    = $request->subsubcategory_id;
         $customer_product->brand_id             = $request->brand_id;
         $customer_product->conditon             = $request->conditon;
         $customer_product->location             = $request->location;

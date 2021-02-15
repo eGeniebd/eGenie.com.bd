@@ -17,10 +17,10 @@
                                 <thead>
                                     <tr>
                                         <th>{{ translate('Code')}}</th>
-                                        <th>{{ translate('Date')}}</th>
+                                        <th data-breakpoints="md">{{ translate('Date')}}</th>
                                         <th>{{ translate('Amount')}}</th>
-                                        <th>{{ translate('Delivery Status')}}</th>
-                                        <th>{{ translate('Payment Status')}}</th>
+                                        <th data-breakpoints="md">{{ translate('Delivery Status')}}</th>
+                                        <th data-breakpoints="md">{{ translate('Payment Status')}}</th>
                                         <th class="text-right">{{ translate('Options')}}</th>
                                     </tr>
                                 </thead>

@@ -39,12 +39,12 @@
         <div class="container">
             <div class="bg-white shadow-sm rounded p-3">
                 <div class="row">
-                    <div class="col-xl-5 col-lg-6">
-                        <div class="sticky-top z-3 row gutters-10 flex-row-reverse">
+                    <div class="col-xl-5 col-lg-6 mb-4">
+                        <div class="sticky-top z-3 row gutters-10">
                             @php
                                 $photos = explode(',',$detailedProduct->photos);
                             @endphp
-                            <div class="col">
+                            <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true'>
                                     @foreach ($photos as $key => $photo)
                                     <div class="carousel-box img-zoom rounded">
@@ -58,8 +58,8 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="col-auto w-80px">
-                                <div class="aiz-carousel carousel-thumb product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-focus-select='true' data-arrows='true'>
+                            <div class="col-12 col-md-auto w-md-80px order-2 order-md-1 mt-3 mt-md-0">
+                                <div class="aiz-carousel product-gallery-thumb" data-items='5' data-nav-for='.product-gallery' data-vertical='true' data-vertical-sm='false' data-focus-select='true' data-arrows='true'>
                                     @foreach ($photos as $key => $photo)
                                     <div class="carousel-box c-pointer border p-1 rounded">
                                         <img
@@ -141,10 +141,10 @@
                             @if(home_price($detailedProduct->id) != home_discounted_price($detailedProduct->id))
 
                                 <div class="row no-gutters mt-3">
-                                    <div class="col-2">
-                                        <div class="opacity-50 mt-2">{{ translate('Price')}}:</div>
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{ translate('Price')}}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <div class="fs-20 opacity-60">
                                             <del>
                                                 {{ home_price($detailedProduct->id) }}
@@ -156,11 +156,11 @@
                                     </div>
                                 </div>
 
-                                <div class="row no-gutters mt-2">
-                                    <div class="col-2">
+                                <div class="row no-gutters my-2">
+                                    <div class="col-sm-2">
                                         <div class="opacity-50">{{ translate('Discount Price')}}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <div class="">
                                             <strong class="h2 fw-600 text-primary">
                                                 {{ home_discounted_price($detailedProduct->id) }}
@@ -173,15 +173,17 @@
                                 </div>
                             @else
                                 <div class="row no-gutters mt-3">
-                                    <div class="col-2">
-                                        <div class="opacity-50">{{ translate('Price')}}:</div>
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{ translate('Price')}}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <div class="">
                                             <strong class="h2 fw-600 text-primary">
                                                 {{ home_discounted_price($detailedProduct->id) }}
                                             </strong>
-                                            <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                            @if($detailedProduct->unit != null)
+                                                <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -189,10 +191,10 @@
 
                             @if (\App\Addon::where('unique_identifier', 'club_point')->first() != null && \App\Addon::where('unique_identifier', 'club_point')->first()->activated && $detailedProduct->earn_point > 0)
                                 <div class="row no-gutters mt-4">
-                                    <div class="col-2">
-                                        <div class="opacity-50">{{  translate('Club Point') }}:</div>
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{  translate('Club Point') }}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <div class="d-inline-block rounded px-2 bg-soft-primary border-soft-primary border">
                                             <span class="strong-700">{{ $detailedProduct->earn_point }}</span>
                                         </div>
@@ -210,10 +212,10 @@
                                     @foreach (json_decode($detailedProduct->choice_options) as $key => $choice)
 
                                     <div class="row no-gutters">
-                                        <div class="col-2">
-                                            <div class="opacity-50 mt-2 ">{{ \App\Attribute::find($choice->attribute_id)->getTranslation('name') }}:</div>
+                                        <div class="col-sm-2">
+                                            <div class="opacity-50 my-2">{{ \App\Attribute::find($choice->attribute_id)->getTranslation('name') }}:</div>
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-sm-10">
                                             <div class="aiz-radio-inline">
                                                 @foreach ($choice->values as $key => $value)
                                                 <label class="aiz-megabox pl-0 mr-2">
@@ -237,10 +239,10 @@
 
                                 @if (count(json_decode($detailedProduct->colors)) > 0)
                                     <div class="row no-gutters">
-                                        <div class="col-2">
-                                            <div class="opacity-50 mt-2">{{ translate('Color')}}:</div>
+                                        <div class="col-sm-2">
+                                            <div class="opacity-50 my-2">{{ translate('Color')}}:</div>
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-sm-10">
                                             <div class="aiz-radio-inline">
                                                 @foreach (json_decode($detailedProduct->colors) as $key => $color)
                                                 <label class="aiz-megabox pl-0 mr-2" data-toggle="tooltip" data-title="{{ \App\Color::where('code', $color)->first()->name }}">
@@ -264,10 +266,10 @@
 
                                 <!-- Quantity + Add to cart -->
                                 <div class="row no-gutters">
-                                    <div class="col-2">
-                                        <div class="opacity-50 mt-2">{{ translate('Quantity')}}:</div>
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{ translate('Quantity')}}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <div class="product-quantity d-flex align-items-center">
                                             <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
                                                 <button class="btn col-auto btn-icon btn-sm btn-circle btn-light" type="button" data-type="minus" data-field="quantity" disabled="">
@@ -286,10 +288,10 @@
                                 <hr>
 
                                 <div class="row no-gutters pb-3 d-none" id="chosen_price_div">
-                                    <div class="col-2">
-                                        <div class="opacity-50">{{ translate('Total Price')}}:</div>
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{ translate('Total Price')}}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <div class="product-price">
                                             <strong id="chosen_price" class="h4 fw-600 text-primary">
 
@@ -354,10 +356,10 @@
                             @endphp
                             @if ($refund_request_addon != null && $refund_request_addon->activated == 1 && $detailedProduct->refundable)
                                 <div class="row no-gutters mt-4">
-                                    <div class="col-2">
-                                        <div class="opacity-50 mt-2">{{ translate('Refund')}}:</div>
+                                    <div class="col-sm-2">
+                                        <div class="opacity-50 my-2">{{ translate('Refund')}}:</div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-sm-10">
                                         <a href="{{ route('returnpolicy') }}" target="_blank">
                                             @if ($refund_sticker != null && $refund_sticker->value != null)
                                                 <img src="{{ uploaded_asset($refund_sticker->value) }}" height="36">
@@ -370,10 +372,10 @@
                                 </div>
                             @endif
                             <div class="row no-gutters mt-4">
-                                <div class="col-2">
-                                    <div class="opacity-50 mt-2">{{ translate('Share')}}:</div>
+                                <div class="col-sm-2">
+                                    <div class="opacity-50 my-2">{{ translate('Share')}}:</div>
                                 </div>
-                                <div class="col-10">
+                                <div class="col-sm-10">
                                     <div class="aiz-share"></div>
                                 </div>
                             </div>
@@ -549,6 +551,7 @@
                                 <div class="p-4">
                                     <ul class="list-group list-group-flush">
                                         @foreach ($detailedProduct->reviews as $key => $review)
+                                            @if($review->user != null)
                                             <li class="media list-group-item d-flex">
                                                 <span class="avatar avatar-md mr-3">
                                                     <img
@@ -580,6 +583,7 @@
                                                     </p>
                                                 </div>
                                             </li>
+                                            @endif
                                         @endforeach
                                     </ul>
 
@@ -677,7 +681,7 @@
                         </div>
                         <div class="p-3">
                             <div class="aiz-carousel gutters-5 half-outside-arrow" data-items="5" data-xl-items="3" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='true'>
-                                @foreach (filter_products(\App\Product::where('subcategory_id', $detailedProduct->subcategory_id)->where('id', '!=', $detailedProduct->id))->limit(10)->get() as $key => $related_product)
+                                @foreach (filter_products(\App\Product::where('category_id', $detailedProduct->category_id)->where('id', '!=', $detailedProduct->id))->limit(10)->get() as $key => $related_product)
                                 <div class="carousel-box">
                                     <div class="aiz-card-box border border-light rounded hov-shadow-md my-2 has-transition">
                                         <div class="">

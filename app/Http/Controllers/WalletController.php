@@ -18,7 +18,7 @@ class WalletController extends Controller
 {
     public function index()
     {
-        $wallets = Wallet::where('user_id', Auth::user()->id)->paginate(9);
+        $wallets = Wallet::where('user_id', Auth::user()->id)->latest()->paginate(9);
         return view('frontend.user.wallet.index', compact('wallets'));
     }
 
@@ -72,7 +72,11 @@ class WalletController extends Controller
         } elseif ($request->payment_option == 'ngenius') {
             $ngenius = new NgeniusController();
             return $ngenius->pay();
-        } else if ($request->payment_option == 'mpesa') {
+        } else if ($request->payment_option == 'iyzico') {
+            $iyzico = new IyzicoController();
+            return $iyzico->pay();
+        }
+        else if ($request->payment_option == 'mpesa') {
             $mpesa = new MpesaController();
             return $mpesa->pay();
         } else if ($request->payment_option == 'flutterwave') {

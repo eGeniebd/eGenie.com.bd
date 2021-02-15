@@ -32,10 +32,13 @@
                 <div class="form-group row">
                     <label class="col-md-3 col-form-label">{{translate('Parent Category')}}</label>
                     <div class="col-md-9">
-                        <select class="select2 form-control aiz-selectpicker" name="parent_id" data-toggle="select2" data-placeholder="Choose ..."data-live-search="true">
-                            <option value="0" @if ($category->parent_id == "0") selected @endif>{{ translate('No Parent') }}</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}" @if ($cat->id == $category->parent_id) selected @endif>{{ $cat->getTranslation('name', $lang) }}</option>
+                        <select class="select2 form-control aiz-selectpicker" name="parent_id" data-toggle="select2" data-placeholder="Choose ..."data-live-search="true" data-selected="{{ $category->parent_id }}">
+                            <option value="0">{{ translate('No Parent') }}</option>
+                            @foreach ($categories as $acategory)
+                                <option value="{{ $acategory->id }}">{{ $acategory->getTranslation('name') }}</option>
+                                @foreach ($acategory->childrenCategories as $childCategory)
+                                    @include('categories.child_category', ['child_category' => $childCategory])
+                                @endforeach
                             @endforeach
                         </select>
                     </div>
@@ -99,7 +102,7 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Commission Rate')}}</label>
                         <div class="col-md-9 input-group">
-                            <input type="number" min="0" step="0.01" id="commision_rate" name="commision_rate" value="{{ $category->commision_rate }}" class="form-control">
+                            <input type="number" lang="en" min="0" step="0.01" id="commision_rate" name="commision_rate" value="{{ $category->commision_rate }}" class="form-control">
                             <div class="input-group-append">
                                 <span class="input-group-text">%</span>
                             </div>
